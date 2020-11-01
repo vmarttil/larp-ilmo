@@ -24,3 +24,4 @@ Sovellus tarjoaa liveroolipelien järjestäjille mahdollisuuden rekisteröityä 
 - ilmoittautumislomakkeen lähettäminen
 
 ## Sovelluksen tietokantarakenne
+![Database diagram](https://github.com/vmarttil/larp-ilmo/blob/main/images/larp-ilmo.png)
