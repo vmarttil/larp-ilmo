@@ -23,5 +23,16 @@ Sovellus tarjoaa liveroolipelien järjestäjille mahdollisuuden rekisteröityä 
 - ilmoittautumislomakkeen täyttäminen
 - ilmoittautumislomakkeen lähettäminen
 
+## Tarvittavat sivut / näkymät
+- sisäänkirjaus
+- rekisteröityminen / omien tietojen muokkaus
+- pelin luonti / tietojen täyttäminen
+- ilmoittautumislomakkeen luonti
+- uuden kysymyksen luonti
+- julkaistut pelit
+- ilmoittautumislomakkeen täyttö
+- vastausluettelo
+- yksittäisen vastauksen tarkastelu
+
 ## Sovelluksen tietokantarakenne
 ![Database diagram](https://github.com/vmarttil/larp-ilmo/blob/main/images/larp-ilmo.png)
