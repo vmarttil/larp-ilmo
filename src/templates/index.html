@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+<h2>Etusivu</h2>
+<p>Tervetuloa LARP-ilmoon, palveluun jonka avulla voit ilmoittautua palvelussa julkaistuihin peleihin tai luoda ilmoittautumislomakkeen omalle pelillesi.</p>
+<h3>Ilmoitetut pelit</h3>
+<table>
+  <tr>
+    <th>Nimi</th>
+    <th>Ajankohta</th>
+    <th>Paikkakunta</th>
+  </tr>
+{% for game in games %}
+  <tr>
+    <td>{{ game['name'] }}</td>
+    <td>{{ game['start_date'] }}{% if game['end_date'] != game['start_date'] %}–{{ game['end_date'] }}{% endif %}</td>
+    <td>{{ game['location'] }}</td>
+  </tr>
+{% endfor %}
+</table>
+{% endblock %}

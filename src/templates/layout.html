@@ -1,0 +1,31 @@
+<!doctype html>
+<title>LARP-ilmo - {% block title %}{% endblock %}</title>
+<h1>LARP-ilmo</h1>
+
+<div class=navigation>
+  <a href="/">Etusivu</a>
+  <a href="/newgame">Ilmoita peli</a>
+  {% if session['user_id'] %}
+    <span class="username_label">{{ session['user_name'] }}</span>
+    <a href="/logout">Kirjaudu ulos</a>
+  {% else %}
+    <a href="/login">Kirjaudu sisään</a>
+  {% endif %}
+</div>
+<div class="flashes">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <ul>
+      {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</div>
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+<div class="footer">
+  Voit lähettää palautetta palvelusta <a href="mailto:ville.marttila@iki.fi">ylläpidolle</a>
+</div>

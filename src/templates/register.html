@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Rekisteröityminen{% endblock %}
+{% block content %}
+<form action="/register" method="post">
+  {{ form.hidden_tag() }}
+  {{ form.csrf_token }}
+  <p>
+      {{ form.email.label }} 
+      {{ form.email(size=32) }}
+      {% for error in form.email.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+  </p>
+  <p>
+      {{ form.password.label }}
+      {{ form.password(size=32) }}
+      {% for error in form.password.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+  </p>
+  <p>
+    {{ form.name.label }} 
+    {{ form.name(size=32) }}
+    {% for error in form.name.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.gender.label }} 
+    {{ form.gender() }}
+  </p>
+  <p>
+    {{ form.birth_year.label }} 
+    {{ form.birth_year(size=4) }}
+    {% for error in form.birth_year.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.profile.label }}
+    {{ form.profile(render_kw={'class': 'form-control', 'rows': 8}) }}
+    {% for error in form.profile.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
