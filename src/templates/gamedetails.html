@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}{{ game['name'] }}{% endblock %}
+{% block content %}
+<h1>{{ game['name'] }}</h1>
+<ul>
+  <li><span class="label">Ajankohta: </span>{{ format_daterange(game['start_date'], game['end_date']) }}</li>
+  <li><span class="label">Paikka: </span>{{ game['location'] }}</li>
+  <li><span class="label">Hinta: </span>{{ game['price'] }} €</li>
+  <li><span class="label">Järjestäjät: </span>
+    <ul>
+    {% for organiser in game['organisers'] %}
+      <li> {{ format_name(organiser['first_name'], organiser['last_name'], organiser['nickname']) }} </li>
+    {% endfor %}
+    </ul>
+  </li>
+</ul>
+<p>{{ game['description'] }}</p>
+{% endblock %}

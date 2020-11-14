@@ -4,8 +4,8 @@
 
 <div class=navigation>
   <a href="/">Etusivu</a>
-  <a href="/newgame">Ilmoita peli</a>
   {% if session['user_id'] %}
+    <a href='{{url_for("newgame")}}'>Ilmoita peli</a>
     <span class="username_label">{{ session['user_name'] }}</span>
     <a href="/logout">Kirjaudu ulos</a>
   {% else %}

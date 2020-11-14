@@ -1,6 +1,6 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, IntegerField, TextAreaField, DateField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, IntegerField, TextAreaField, DateField, HiddenField
 from wtforms.validators import DataRequired, Email, Length, NumberRange
 
 class RegisterForm(FlaskForm):
@@ -10,8 +10,11 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Salasana: ', validators=[
         DataRequired(message="Salasana on pakollinen"),
         Length(min=6, max=24, message="Salasanan on oltava 6-24 merkkiä pitkä")])
-    name = StringField('Nimi: ', validators=[
-        DataRequired(message="Nimi on pakollinen")])
+    first_name = StringField('Etunimi: ', validators=[
+        DataRequired(message="Etunimi on pakollinen")])
+    last_name = StringField('Sukunimi: ', validators=[
+        DataRequired(message="Sukunimi on pakollinen")])
+    nickname = StringField('Lempinimi: ')        
     gender = RadioField('Sukupuoli: ', choices=[
         ('0', 'En halua kertoa'),
         ('1', 'Mies'),
@@ -31,12 +34,16 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Kirjaudu')
 
 class GameForm(FlaskForm):
+    id = HiddenField()
     name = StringField('Pelin nimi: ', validators=[
         DataRequired(message="Nimi on pakollinen")])
     start_date = DateField('Pelin alkupäivämäärä: ')
     end_date = DateField('Pelin loppupäivämäärä: ')
     location = StringField('Pelin sijainti: ')
+    price = IntegerField('Pelin hinta: ')
     description = TextAreaField('Pelin kuvaus: ', validators=[
         DataRequired(message="Kuvaus on pakollinen"),
         Length(min=10, max=1000, message="Kuvauksen on oltava 10-1000 merkkiä pitkä")])
     submit = SubmitField('Tallenna peli')
+
+

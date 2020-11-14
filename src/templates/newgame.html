@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
-{% block title %}Uuden pelin luonti{% endblock %}
+{% block title %}{{title}}{% endblock %}
 {% block content %}
-<form action="/newgame" method="post">
+<form action='{{ action }}' method="post">
   {{ form.hidden_tag() }}
   <p>
     {{ form.name.label }}
@@ -21,6 +21,10 @@
   <p>
     {{ form.location.label }}
     {{ form.location(size=32) }}
+  </p>
+  <p>
+    {{ form.price.label }}
+    {{ form.price(size=4) }} €
   </p>
   <p>
     {{ form.description.label }}

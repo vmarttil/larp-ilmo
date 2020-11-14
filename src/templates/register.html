@@ -3,7 +3,6 @@
 {% block content %}
 <form action="/register" method="post">
   {{ form.hidden_tag() }}
-  {{ form.csrf_token }}
   <p>
       {{ form.email.label }} 
       {{ form.email(size=32) }}
@@ -15,15 +14,24 @@
       {{ form.password.label }}
       {{ form.password(size=32) }}
       {% for error in form.password.errors %}
-      <span style="color: red;">[{{ error }}]</span>
+        <span style="color: red;">[{{ error }}]</span>
       {% endfor %}
   </p>
   <p>
-    {{ form.name.label }} 
-    {{ form.name(size=32) }}
-    {% for error in form.name.errors %}
-    <span style="color: red;">[{{ error }}]</span>
+    {{ form.first_name.label }} 
+    {{ form.first_name(size=32) }}
+    {% for error in form.first_name.errors %}
+      <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
+    <br/>
+    {{ form.last_name.label }} 
+    {{ form.last_name(size=32) }}
+    {% for error in form.last_name.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+    <br/>
+    {{ form.nickname.label }} 
+    {{ form.nickname(size=32) }}
   </p>
   <p>
     {{ form.gender.label }} 

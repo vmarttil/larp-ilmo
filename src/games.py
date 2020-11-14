@@ -2,25 +2,88 @@ from db import db
 import users
 
 def get_list():
-    sql = "SELECT id, name, start_date, end_date, location FROM Game ORDER BY start_date"
+    sql =  "SELECT \
+                g.id, \
+                g.name, \
+                g.start_date, \
+                g.end_date, \
+                g.location, \
+                g.price, \
+                go.person_id AS organiser_id \
+            FROM Game AS g \
+                JOIN GameOrganiser AS go \
+                    ON g.id = go.game_id \
+            ORDER BY start_date"
     result = db.session.execute(sql)
     return result.fetchall()
 
 def get_details(id):
-    sql = "SELECT * FROM Game WHERE id = :id"
-    result = db.session.execute(sql, {"id":id})
-    return result.fetchone()
+    sql_game = "SELECT * \
+                    FROM Game \
+                    WHERE id = :id"
+    result_game = db.session.execute(sql_game, {"id":id})
+    game = result_game.fetchone()
+    sql_orgs =  "SELECT \
+                    p.id, \
+                    p.first_name, \
+                    p.last_name, \
+                    p.nickname, \
+                    p.email \
+                FROM Person AS p \
+                    JOIN GameOrganiser AS go \
+                        ON p.id = go.person_id \
+                WHERE go.game_id = :id \
+                ORDER BY p.last_name"
+    result_orgs = db.session.execute(sql_orgs, {"id":id})
+    organisers = result_orgs.fetchall()
+    game = dict(game.items())
+    game['organisers'] = organisers
+    return game
 
-def send(name, start_date, end_date, location, description):
+def send(id, name, start_date, end_date, location, price, description):
     user_id = users.user_id()
+    print("The id at the send function is: " + str(id))
     if user_id == 0:
         return False
-    sql = "INSERT INTO Game (name, start_date, end_date, location, description) VALUES (:name, :start_date, :end_date, :location, :description)"
-    db.session.execute(sql, {"name":name, "start_date":start_date, "end_date":end_date, "location":location, "description":description})
-    sql = "SELECT CURRVAL(pg_get_serial_sequence('Game','id'))"
-    result = db.session.execute(sql)
-    game_id = result.fetchone()[0]
-    sql = "INSERT INTO GameOrganiser (user_id, game_id) VALUES (:user_id, :game_id)"
-    db.session.execute(sql, {"user_id":user_id, "game_id":game_id})
+    if id is None:
+        sql =  "INSERT INTO Game (\
+                    name, \
+                    start_date, \
+                    end_date, \
+                    location, \
+                    price, \
+                    description \
+                ) \
+                VALUES ( \
+                    :name, \
+                    :start_date, \
+                    :end_date, \
+                    :location, \
+                    :price, \
+                    :description \
+                )"
+        db.session.execute(sql, {"name":name, "start_date":start_date, "end_date":end_date, "location":location, "price":price, "description":description})
+        sql = "SELECT CURRVAL(pg_get_serial_sequence('Game','id'))"
+        result = db.session.execute(sql)
+        game_id = result.fetchone()[0]
+        sql =  "INSERT INTO GameOrganiser ( \
+                    person_id, \
+                    game_id \
+                ) \
+                VALUES ( \
+                    :person_id, \
+                    :game_id \
+                )"
+        db.session.execute(sql, {"person_id":person_id, "game_id":game_id})
+    else: 
+        sql =  "UPDATE Game SET \
+                    name=:name, \
+                    start_date=:start_date, \
+                    end_date=:end_date, \
+                    location=:location, \
+                    price=:price, \
+                    description=:description \
+                WHERE id=:id"
+        db.session.execute(sql, {"name":name, "start_date":start_date, "end_date":end_date, "location":location, "price":price, "description":description, "id":id})
     db.session.commit()
     return True
