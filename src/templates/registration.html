@@ -6,16 +6,12 @@
 <form action='{{ action }}' method="post">
   {{ form.hidden_tag() }}
   <h1>{{ title }}</h1>
-  <p class="red">[Toistaiseksi käyttäjä voi vain julkaista oletuslomakkeen, muokkaustoiminnallisuus toteutetaan projektin seuraavassa vaiheessa.]</p>
+  
   {% for question in questions %}
     {{ render_question(question) }}
   {% endfor %}
   <p>
-    {% if form.published.data == False %}
-      {{ form.publish() }}
-    {% else %}
-      {{ form.cancel() }}
-    {% endif %}
+    {{ form.submit() }}
   </p>
 </form>
 {% endblock %}

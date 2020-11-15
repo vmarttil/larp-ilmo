@@ -56,6 +56,7 @@ class RegistrationForm(FlaskForm):
     published = HiddenField()
     publish = SubmitField('Avaa ilmoittautuminen', widget=SubmitInput())
     cancel = SubmitField('Sulje ilmoittautuminen', widget=SubmitInput())
+    submit = SubmitField('Ilmoittaudu', widget=SubmitInput())
 
 
 

@@ -6,7 +6,6 @@ app.secret_key = getenv("SECRET_KEY")
 
 import routes
 
-
 @app.template_filter('formatdate')
 def format_date(date, format="%-d.%-m.%Y"):
     if date is None:

@@ -55,7 +55,7 @@ def get_default_questions():
 
 def get_form_questions(form_id):
     sql =  "SELECT \
-                q.id, \
+                fq.id, \
                 ft.name AS field_type, \
                 q.question_text AS text, \
                 q.description, \
@@ -106,6 +106,39 @@ def is_published(game_id):
     except Exception as ex:
         result = None
     return result
+
+def save_answers(answer_list):
+    sql_text = "INSERT INTO Answer ( \
+                    person_id, \
+                    formquestion_id, \
+                    answer_text \
+                    ) VALUES ( \
+                        :person_id, \
+                        :formquestion_id, \
+                        :answer_text \
+                        );"
+    sql_answer = "INSERT INTO Answer ( \
+                    person_id, \
+                    formquestion_id \
+                    ) VALUES ( \
+                        :person_id, \
+                        :formquestion_id \
+                        ) RETURNING id;"
+    sql_option = "INSERT INTO AnswerOption ( \
+                    answer_id, \
+                    questionoption_id \
+                    ) VALUES ( \
+                        :answer_id, \
+                        :questionoption_id \
+                        );"        
+    for answer in answer_list:
+        if "answer_text" in answer:
+            db.session.execute(sql_text, {"person_id":answer['person_id'], "formquestion_id":answer['formquestion_id'], "answer_text":answer['answer_text']})
+        else:
+            answer_id = db.session.execute(sql_answer, {"person_id":answer['person_id'], "formquestion_id":answer['formquestion_id']}).fetchone()[0]
+            db.session.execute(sql_option, {"answer_id":answer_id, "questionoption_id":answer['questionoption_id']})
+    db.session.commit()
+    return True
 
 def to_dict_list(result):
     itemlist = []

@@ -66,6 +66,11 @@ CREATE TABLE Answer (
     id SERIAL PRIMARY KEY,
     person_id INTEGER REFERENCES Person (id),
     formquestion_id INTEGER REFERENCES FormQuestion (id),
-    questionoption_id INTEGER REFERENCES QuestionOption (id),
     answer_text TEXT
+);
+
+CREATE TABLE AnswerOption (
+    id SERIAL PRIMARY KEY,
+    answer_id INTEGER REFERENCES Answer (id),
+    questionoption_id INTEGER REFERENCES QuestionOption (id)
 );
