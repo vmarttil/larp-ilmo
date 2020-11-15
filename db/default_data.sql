@@ -85,11 +85,35 @@ INSERT INTO QuestionOption (
         (8,20),
         (8,21);
 
+INSERT INTO Game (
+    name, 
+    start_date,
+    end_date,
+    location,
+    price,
+    description
+    ) VALUES (
+        'Testipeli',
+        DATE '2021-05-21',
+        DATE '2021-05-21',
+        'Helsinki',
+        35,
+        'Tässä on lyhyt kuvaus pelistä.'
+        )
+
+INSERT INTO GameOrganiser (
+    person_id,
+    game_id
+    ) VALUES (
+        1,
+        1
+    )
+
 INSERT INTO Form (
     name
     ) 
     VALUES
-    ('Oletuslomake');
+    (1, 'Oletuslomake', False);
 
 INSERT INTO FormQuestion (
     form_id,

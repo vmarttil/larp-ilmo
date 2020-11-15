@@ -82,7 +82,6 @@ def editform(game_id):
 
 @app.route("/game/<game_id>/form/publish", methods=["post"])
 def publishform(game_id):
-    print(request.form['form_id'])
     if 'publish' in request.form:
         gameforms.publish_form(request.form['form_id'])
     if 'cancel' in request.form:
@@ -136,7 +135,6 @@ def logout():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        print("Rekisteröintilomake lähti")
         email = request.form["email"]
         password = request.form["password"]
         first_name = request.form["first_name"]
