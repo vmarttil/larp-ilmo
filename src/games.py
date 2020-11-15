@@ -10,12 +10,18 @@ def get_list():
                 g.location, \
                 g.price, \
                 go.person_id AS organiser_id, \
-                f.published \
+                f.published, \
+                COUNT(DISTINCT a.person_id) AS num_registrations \
             FROM Game AS g \
                 JOIN GameOrganiser AS go \
                     ON g.id = go.game_id \
                 LEFT JOIN Form AS f \
                     ON g.id = f.game_id \
+                LEFT JOIN FormQuestion as fq \
+                    ON f.id = fq.form_id \
+                LEFT JOIN Answer as a \
+                    ON fq.id = a.formquestion_id \
+            GROUP BY g.id, g.name, g.start_date, g.end_date, g.location, g.price, go.person_id, f.published \
             ORDER BY start_date"
     result = db.session.execute(sql)
     game_list = result.fetchall()

@@ -10,6 +10,7 @@
     <th>Nimi</th>
     <th>Ajankohta</th>
     <th>Paikkakunta</th>
+    <th>Ilmoittautumisia</th>
   </tr>
 {% for game in games %}
   <tr>
@@ -22,6 +23,7 @@
       {% endif %}
     </td>
     <td>{{ game['location'] }}</td>
+    <td>{{ game['num_registrations'] }}</td>
     <td>
       {% if game['published'] == True %}
         <a href="\game\{{ game['id'] }}\register">Ilmoittaudu</a>
