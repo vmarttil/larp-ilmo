@@ -41,6 +41,34 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 ## Sovelluksen tietokantarakenne
 ![Database diagram](https://github.com/vmarttil/larp-ilmo/blob/main/images/larp-ilmo_2.png)
 
-## Sovelluksen käyttöhje (kehitysversio)
+## Sovelluksen käyttöhje (testausversio)
+
+Sovellus on testattavissa osoitteessa [https://larp-ilmo.herokuapp.com/](https://larp-ilmo.herokuapp.com/).
+
+### Pääsivu
+
+Sovelluksen pääsivulla näkyy lista sovelluksessa julkaistuista peleistä ja niiden tietoja on mahdollista
+tarkastella (myös kirjautumatta sovellukseen) klikkaamalla pelin nimeä listassa. Sivun yläreunassa on linkit 
+sovellukseen rekisteröitymistä ja rekisteröityneiden käyttäjien sisäänkirjautumista varten. Rekisteröitymällä
+on mahdollista luoda omia pelejä ja ilmoittautua muiden luomiin peleihin.
+
+### Pelin luonti
+
+Sivun yläreunassa näkyy sisäänkirjautuneille käyttäjille linkki "Ilmoita peli", jonka kautta on mahdollista lisätä
+sovellukseen uusi peli tietoineen ja luoda sille ilmoittautumislomake. Uuden pelin luonti -sivulla "Tallenna peli" 
+tallentaa pelin tiedot, mutta ei vielä luo sille ilmoittautumislomaketta. Pelin luonut käyttäjä pääsee myöhemmin 
+muokkaamaan pelin tietoja pääsivun peliluettelossa näkyvän "Muokkaa"-linkin kautta, ja tätä kautta voi myös luoda 
+pelille ilmoittautumislomakkeen. 
+
+### Ilmoittautumislomakkeen luonti
+
+Pelin luonti- ja muokkausivun painike "Luo ilmoittautumislomake" luo pelille ilmoittautumislomakkeen ja avaa sen
+näkyviin. Tässä vaiheessa lomakkeessa on oletuskysymykset, joita ei pysty vielä muokkaamaan; lopullisessa versiossa 
+käyttäjä voi poistaa oletuskysymyksiä ja luoda itse uusia kysymyksiä valmiiksi määriteltyjen kenttätyyppien pohjalta 
+ja lisätä niitä ilmoittautumiseen. Ilmoittautumislomakkeen muokkausnäkymän alareunassa on "Avaa ilmoittautuminen" 
+-painike, joka julkaisee ilmoittautumislomakkeen siten, että kaikki sisään kirjautuneet käyttäjät pystyvät ilmoittautumaan 
+peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta.
+
+### Ilmoittautuminen
 
 

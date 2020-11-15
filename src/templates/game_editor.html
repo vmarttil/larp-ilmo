@@ -29,7 +29,8 @@
   </p>
   <p>
     {{ form.description.label }}
-    {{ form.description() }}
+    <br/>
+    {{ form.description(rows='12',cols='80') }}
     {% for error in form.description.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
