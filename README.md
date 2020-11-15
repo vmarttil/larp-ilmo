@@ -18,11 +18,13 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 - uusien kysymysten luonti (kenttätyyppi + vastausvaihtoehdot)
 - lomakkeen julkaiseminen &#x2713;
 - täytettyjen lomakkeiden vastausten tarkastelu
+- pelin ilmoittautumisten tallennus json-tiedostona
 
 ### Käyttäjälle
 - tunnuksen luonti &#x2713;
 - palvelussa julkaistujen pelien tarkastelu &#x2713;
 - ilmoittautumislomakkeen täyttäminen &#x2713;
+- omien tietojen täyttäminen automaattisesti käyttäjäprofiilista
 - ilmoittautumislomakkeen lähettäminen &#x2713;
 
 ## Tarvittavat sivut / näkymät
@@ -67,8 +69,17 @@ näkyviin. Tässä vaiheessa lomakkeessa on oletuskysymykset, joita ei pysty vie
 käyttäjä voi poistaa oletuskysymyksiä ja luoda itse uusia kysymyksiä valmiiksi määriteltyjen kenttätyyppien pohjalta 
 ja lisätä niitä ilmoittautumiseen. Ilmoittautumislomakkeen muokkausnäkymän alareunassa on "Avaa ilmoittautuminen" 
 -painike, joka julkaisee ilmoittautumislomakkeen siten, että kaikki sisään kirjautuneet käyttäjät pystyvät ilmoittautumaan 
-peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta.
+peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta. Kun ilmoittautuminen on avattu, "Avaa ilmoittautuminen" -painike 
+korvautuu "Sulje ilmoittautuminen" -painikkeella, joka poistaa ilmoittautumislinkin pääsivun listasta ja estää uusien 
+ilmoittautumisten tekemisen.
 
 ### Ilmoittautuminen
+
+Kun pelin luonut käyttäjä on avannut pelin ilmoittautumisen, kuka tahansa kirjautunut käyttäjä voi ilmoittautua peliin 
+klikkaamalla etusivun listassa olevaa "Ilmoittaudu" -linkkiä ja täyttämällä avautuvan ilmoittautumislomakkeen. Kun lomake 
+on täytetty ja käyttäjä klikkaa sivun alareunassa olevaa "Ilmoittaudu"-painiketta, ilmoittautumisen tiedot tallennetaan 
+tietokantaan ja sovellus palauttaa käyttäjän pääsivulle. Ilmoittautumisia ei toistaiseksi pääse vielä tarkastelemaan, mutta 
+valmiissa versiossa kaikilla käyttäjillä tulee mahdollisuus tarkastella omia ilmoittautumisiaan ja pelin luonut käyttäjä 
+voi tarkastella kaikkia oman pelinsä ilmoittautumisia ja ladata ne json-tiedostona.
 
 
