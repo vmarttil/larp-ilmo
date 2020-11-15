@@ -78,7 +78,7 @@ def editform(game_id):
         questions = gameforms.get_default_questions() if gameforms.get_form_questions(gameform['id']) is None else gameforms.get_form_questions(gameform['id'])        
         for question in questions:
             print("Kysymys reitittimessä: " + question['text'])
-            question['options'] = gameforms.get_question_options(question['id'])
+            question['options'] = gameforms.get_question_options(int(question['id']))
             for option in question['options']:
                 print("Kysymysten optio reitittimessä: " + option['text'])
         return render_template("form_editor.html", game=game, form=form, questions=questions, action="/game/" + game_id + "/form/publish" , title="Ilmoittautumislomakkeen muokkaus: " + game['name'])
