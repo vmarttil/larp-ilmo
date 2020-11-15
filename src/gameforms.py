@@ -76,10 +76,10 @@ def get_question_options(question_id):
     sql =  "SELECT \
                 o.id, \
                 o.option_text AS text \
-            FROM Option AS o \
+            FROM Option as o \
                 JOIN QuestionOption AS qo \
                     ON o.id = qo.option_id \
-            WHERE qo.question_id = :question_id;"
+            WHERE qo.question_id = 7;"
     result = db.session.execute(sql, {"question_id":question_id})
     option_list = result.fetchall()
     print("Optiolistan pituus funktiossa: " + str(len(option_list)))
