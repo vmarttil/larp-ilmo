@@ -21,7 +21,6 @@ def get_list():
     game_list = result.fetchall()
     return game_list
 
-
 def get_details(id):
     sql_game = "SELECT * \
                     FROM Game \

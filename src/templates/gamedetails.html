@@ -3,7 +3,14 @@
 {% block content %}
 <h1>{{ game['name'] }}</h1>
 <ul>
-  <li><span class="label">Ajankohta: </span>{{ format_daterange(game['start_date'], game['end_date']) }}</li>
+  <li>
+    <span class="label">Ajankohta: </span>
+    {% if game['end_date'] == game['start_date'] %}
+      {{ game['start_date']|formatdate }}
+    {% else %}
+      {{ format_daterange(game['start_date'], game['end_date']) }}
+    {% endif %}
+  </li>
   <li><span class="label">Paikka: </span>{{ game['location'] }}</li>
   <li><span class="label">Hinta: </span>{{ game['price'] }} €</li>
   <li><span class="label">Järjestäjät: </span>
