@@ -1,0 +1,21 @@
+{% from "macros.html" import render_question with context %}
+
+{% extends "layout.html" %}
+{% block title %}{{ title }} - {{ game['name'] }}{% endblock %}
+{% block content %}
+<form action='{{ action }}' method="post">
+  {{ form.hidden_tag() }}
+  <h1>{{ game['name'] }} – {{ title }}</h1>
+  <p class="red">[Toistaiseksi käyttäjä voi vain julkaista oletuslomakkeen, muokkaustoiminnallisuus toteutetaan projektin seuraavassa vaiheessa.]</p>
+  {% for question in questions %}
+    {{ render_question(question) }}
+  {% endfor %}
+  <p>
+    {% if form.published.data == False %}
+      {{ form.publish() }}
+    {% else %}
+      {{ form.cancel() }}
+    {% endif %}
+  </p>
+</form>
+{% endblock %}

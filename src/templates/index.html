@@ -15,9 +15,16 @@
     <td><a href="\game\{{ game['id'] }}">{{ game['name'] }}</a></td>
     <td>{{ game['start_date'] }}{% if game['end_date'] != game['start_date'] %}–{{ game['end_date'] }}{% endif %}</td>
     <td>{{ game['location'] }}</td>
-    {% if game['organiser_id'] == session['user_id'] %}
-      <td><a href="\game\{{ game['id'] }}\edit">Muokkaa</a></td>
-    {% endif %}
+    <td>
+      {% if game['published'] == True %}
+        <a href="\game\{{ game['id'] }}\register">Ilmoittaudu</a>
+      {% endif %}
+    </td>
+    <td>
+      {% if game['organiser_id'] == session['user_id'] %}
+        <a href="\game\{{ game['id'] }}\edit">Muokkaa</a>
+      {% endif %}
+    </td>
   </tr>
 {% endfor %}
 </table>

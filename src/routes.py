@@ -1,12 +1,11 @@
 import sys
 from app import app
 from flask import render_template, request, redirect, flash, url_for
-import games, users
+import games, users, gameforms
 from forms import *
 
 @app.route("/")
 def index():
-    print("Pääsivu latautui", file=sys.stdout)
     game_list = games.get_list()
     return render_template("index.html", games=game_list)
 
@@ -27,35 +26,101 @@ def newgame():
         else:
             flash('Pelin lisääminen ei onnistunut', 'error')
             return redirect(url_for("newgame"))
-    return render_template("newgame.html", form=form, action="/game/new", title="Uuden pelin luonti")
+    return render_template("game_editor.html", form=form, action="/game/new", title="Uuden pelin luonti", has_form=False, his_published=False)
 
 @app.route("/game/<game_id>/edit", methods=["get", "post"])
 def editgame(game_id):
     game = games.get_details(game_id)
+    if users.user_id() not in map(lambda org: org['id'], game['organisers']):
+        return redirect(url_for("index"))
     form = GameForm(data=game)
-    if request.method == 'GET':    
-        return render_template("newgame.html", form=form, action="/game/" + game_id + "/edit" , title="Pelin tietojen päivitys")
+    if request.method == 'GET':
+        has_form = False if gameforms.get_game_form(game_id) is None else True
+        is_published = gameforms.is_published(game_id)
+        return render_template("game_editor.html", form=form, action="/game/" + game_id + "/edit" , title=game['name'] + ": Tietojen päivitys", has_form=has_form, is_published=is_published)
     if form.validate_on_submit():
-        id = request.form["id"]
         name = request.form["name"]
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
         location = request.form["location"]
         price = request.form["price"]
         description = request.form["description"]
-        print("The id in the router is: " + str(id))
-        if games.send(id, name, start_date, end_date, location, price, description):
-            flash('Pelin tiedot päivitetty')
-            return redirect(url_for("index"))
+        if games.send(game_id, name, start_date, end_date, location, price, description):
+            if form.create_form.data:
+                game_form = gameforms.create_game_form(game_id)
+                gameforms.insert_default_questions(game_form['id'])
+                return redirect("/game/" + game_id + "/form/edit")
+            elif form.edit_form.data:
+                return redirect("/game/" + game_id + "/form/edit")    
+            else:
+                flash('Pelin tiedot päivitetty')
+                return redirect(url_for("index"))
         else:
             flash('Pelin päivitys ei onnistunut', 'error')
             return redirect(url_for("editgame"))
-    # return render_template("newgame.html", form=form)
 
 @app.route("/game/<game_id>")
 def game_details(game_id):
     game = games.get_details(game_id)
     return render_template("gamedetails.html", game=game)
+
+# For now, game organisers can only create a default form, view it and publish it. 
+# The form editing functionality will be added in the next phase of the project.
+@app.route("/game/<game_id>/form/edit", methods=["get", "post"])
+def editform(game_id):
+    game = games.get_details(game_id)
+    if users.user_id() not in map(lambda org: org['id'], game['organisers']):
+        return redirect(url_for("index"))
+    if request.method == 'GET':
+        gameform = gameforms.get_game_form(game_id)
+        form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
+        form = RegistrationForm(data=form_data)
+        questions = gameforms.get_default_questions() if gameforms.get_form_questions(gameform['id']) is None else gameforms.get_form_questions(gameform['id'])        
+        for question in questions:
+            question['options'] = gameforms.get_question_options(question['id'])
+        # test_questions = [{"id": 1, "field_type": "StringField", "text": "Testikysymys", "description": "Tämä on testikysymys, jolla testataan renderöinnin toimivuutta", "position": 1}] 
+        return render_template("form_editor.html", game=game, form=form, questions=questions, action="/game/" + game_id + "/form/publish" , title="Ilmoittautumislomakkeen muokkaus")
+
+
+
+@app.route("/game/<game_id>/form/publish", methods=["post"])
+def publishform(game_id):
+    print(request.form['form_id'])
+    if 'publish' in request.form:
+        gameforms.publish_form(request.form['form_id'])
+    if 'cancel' in request.form:
+        gameforms.cancel_form(request.form['form_id'])
+    return redirect("/game/" + str(game_id) + "/edit")
+
+
+@app.route("/game/<game_id>/register", methods=["get", "post"])
+def gameregistration(game_id):
+    game = games.get_details(game_id)
+    """ 
+    if request.method == 'GET':
+        gameform = gameforms.get_game_form(game_id)
+        form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
+        form = RegistrationForm(data=form_data)
+        print(form.data)
+        questions = gameforms.get_default_questions() if gameforms.get_form_questions(gameform['id']) is None else gameforms.get_form_questions(gameform['id'])        
+        for question in questions:
+            question['options'] = gameforms.get_question_options(question['id'])
+            print(question['id'])
+            print(question['field_type'])
+            print(question['text'])
+            print(question['description'])
+            if question['options'] is not None:
+                for option in question['options']:
+                    print(option['id'])
+                    print(option['text'])
+        # test_questions = [{"id": 1, "field_type": "StringField", "text": "Testikysymys", "description": "Tämä on testikysymys, jolla testataan renderöinnin toimivuutta", "position": 1}] 
+        return render_template("form_editor.html", game=game, form=form, questions=questions, action="/game/" + game_id + "/form/publish" , title="Ilmoittautumislomakkeen muokkaus")
+
+ """
+
+
+
+
 
 @app.route("/login", methods=["get","post"])
 def login():
@@ -77,7 +142,6 @@ def logout():
 
 @app.route("/register", methods=["get","post"])
 def register():
-    print("Rekisteröintilomake latautui")
     form = RegisterForm()
     if form.validate_on_submit():
         print("Rekisteröintilomake lähti")

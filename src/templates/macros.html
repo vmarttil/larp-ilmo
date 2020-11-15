@@ -1,0 +1,91 @@
+<!-- Macro for rendering different types of questions in the form -->
+{% macro render_question(question) %}
+  {% if question['field_type'] == 'StringField' %}
+    {{ render_string_field(question) }}
+  {% elif question['field_type'] == 'IntegerField' %}
+    {{ render_integer_field(question) }}
+  {% elif question['field_type'] == 'RadioField' %}
+    {{ render_radio_field(question) }}
+  {% elif question['field_type'] == 'SelectField' %}
+    {{ render_select_field(question) }}
+  {% elif question['field_type'] == 'SelectMultipleField' %}
+    {{ render_select_multiple_field(question) }}
+  {% elif question['field_type'] == 'TextAreaField' %}
+    {{ render_text_area_field(question) }}
+  {% elif question['field_type'] == 'CheckboxListField' %}
+    {{ render_checkbox_list_field(question) }}
+  {% endif %}
+{% endmacro %}
+
+<!-- Macro for rendering questions of type StringField -->
+{% macro render_string_field(question) %}
+  <div class="question string_field">
+    <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
+    <input type="text" id="{{ question.id }}" name="string_{{ question.id }}" size="32"/>
+    <span class="question_desc">{{ question.description }}</span>
+  </div>
+{% endmacro %}
+
+<!-- Macro for rendering questions of type IntegerField -->
+{% macro render_integer_field(question) %}
+  <div class="question integer_field">
+    <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
+    <input type="number" id="{{ question.id }}" name="integer_{{ question.id }}" size="4"/>
+    <span class="question_desc">{{ question.description }}</span>
+  </div>
+{% endmacro %}
+
+<!-- Macro for rendering questions of type RadioField -->
+{% macro render_radio_field(question) %}
+  <div class="question radio_field">
+    <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
+    <span class="question_desc">{{ question.description }}</span>
+    <ul class="radiobuttons">
+      {% for option in question.options %}
+      <li>
+        <input type="radio" id="{{ question.id }}_{{ option.id }}" name="radio_{{ question.id }}" value="{{ option.id }}"/>
+        <label class="option_text" for="{{ question.id }}_{{ option.id }}" >{{ option.text }}</label>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}
+
+<!-- Macro for rendering questions of type SelectField -->
+{% macro render_select_field(question) %}
+  <div class="question select_field">
+    <label class="question_text">[To be implemented]</p>
+  </div>
+{% endmacro %}
+
+<!-- Macro for rendering questions of type SelectMultipleField -->
+{% macro render_select_multiple_field(question) %}
+  <div class="question select_multiple_field">
+    <label class="question_text">[To be implemented]</p>
+  </div>
+{% endmacro %}
+
+<!-- Macro for rendering questions of type TextAreaField -->
+{% macro render_text_area_field(question) %}
+  <div class="question text_area_field">
+    <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
+    <span class="question_desc">{{ question.description }}</span>
+    <textarea id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12" cols="80"></textarea>
+  </div>
+{% endmacro %}
+
+<!-- Macro for rendering questions of type CheckboxListField -->
+{% macro render_checkbox_list_field(question) %}
+  <div class="question checkbox_list_field">
+    <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
+    <span class="question_desc">{{ question.description }}</span>
+    <ul class="checkboxes">
+      {% for option in question.options %}
+      <li>
+        <input type="checkbox" id="{{ question.id }}_{{ option.id }}" name="checkbox_{{ question.id }}_{{ option.id }}" value="{{ option.id }}"/>
+        <label class="option_text" for="{{ question.id }}_{{ option.id }}" >{{ option.text }}</label>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endmacro %}

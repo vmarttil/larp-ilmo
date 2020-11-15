@@ -1,7 +1,10 @@
 <!doctype html>
-<title>LARP-ilmo - {% block title %}{% endblock %}</title>
+<head>
+  <title>LARP-ilmo - {% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/main.css') }}" />
+</head>
+<body>
 <h1>LARP-ilmo</h1>
-
 <div class=navigation>
   <a href="/">Etusivu</a>
   {% if session['user_id'] %}
@@ -10,8 +13,10 @@
     <a href="/logout">Kirjaudu ulos</a>
   {% else %}
     <a href="/login">Kirjaudu sisään</a>
+    <a href="/register">Rekisteröidy</a>
   {% endif %}
 </div>
+<hr/>
 <div class="flashes">
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -26,6 +31,8 @@
 <div class="content">
   {% block content %}{% endblock %}
 </div>
+<hr/>
 <div class="footer">
   Voit lähettää palautetta palvelusta <a href="mailto:ville.marttila@iki.fi">ylläpidolle</a>
 </div>
+</body>

@@ -1,0 +1,31 @@
+div.content {
+  margin-bottom: 2em;
+}
+
+div.question {
+  margin-bottom: 1em;
+}
+
+ul.radiobuttons {
+  list-style-type: none;
+  margin-top: 0px;
+}
+
+ul.checkboxes {
+  list-style-type: none;
+  margin-top: 0px;
+}
+
+label.question_text {
+  font-weight: bold;
+}
+
+span.question_desc {
+  display: block;
+  font-size: 0.8em;
+
+}
+
+.red {
+  color: red; 
+}

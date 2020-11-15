@@ -9,13 +9,18 @@ def get_list():
                 g.end_date, \
                 g.location, \
                 g.price, \
-                go.person_id AS organiser_id \
+                go.person_id AS organiser_id, \
+                f.published \
             FROM Game AS g \
                 JOIN GameOrganiser AS go \
                     ON g.id = go.game_id \
+                LEFT JOIN Form AS f \
+                    ON g.id = f.game_id \
             ORDER BY start_date"
     result = db.session.execute(sql)
-    return result.fetchall()
+    game_list = result.fetchall()
+    return game_list
+
 
 def get_details(id):
     sql_game = "SELECT * \
@@ -41,9 +46,8 @@ def get_details(id):
     return game
 
 def send(id, name, start_date, end_date, location, price, description):
-    user_id = users.user_id()
-    print("The id at the send function is: " + str(id))
-    if user_id == 0:
+    person_id = users.user_id()
+    if person_id == 0:
         return False
     if id is None:
         sql =  "INSERT INTO Game (\

@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
-{% block title %}{{title}}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block content %}
+<h1>{{ title }}</h1>
 <form action='{{ action }}' method="post">
   {{ form.hidden_tag() }}
   <p>
@@ -28,11 +29,23 @@
   </p>
   <p>
     {{ form.description.label }}
-    {{ form.description(render_kw={'class': 'form-control', 'rows': 8}) }}
+    {{ form.description() }}
     {% for error in form.description.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
+  
+    {% if has_form == True %}
+      {% if is_published == True %}
+        <p>Ilmoittautuminen on avattu.</p>
+      {% else %}
+        <p>Ilmoittautumista ei ole avattu.</p>
+      {% endif %}
+      <p>{{ form.edit_form() }}</p>
+    {% else %}
+      <p>{{ form.create_form() }}</p>
+    {% endif %}
+  
   <p>{{ form.submit() }}</p>
 </form>
 {% endblock %}

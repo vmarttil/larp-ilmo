@@ -26,7 +26,9 @@ CREATE TABLE GameOrganiser (
 
 CREATE TABLE Form (
     id SERIAL PRIMARY KEY,
-    game_id INTEGER REFERENCES Game (id)
+    game_id INTEGER REFERENCES Game (id),
+    name TEXT,
+    published BOOLEAN NOT NULL
 );
 
 CREATE TABLE Question (
@@ -40,7 +42,8 @@ CREATE TABLE Question (
 CREATE TABLE FormQuestion (
     id SERIAL PRIMARY KEY,
     form_id INTEGER REFERENCES Form (id),
-    question_id INTEGER REFERENCES Question (id)
+    question_id INTEGER REFERENCES Question (id),
+    position INTEGER NOT NULL
 );
 
 CREATE TABLE Option (
@@ -62,9 +65,7 @@ CREATE TABLE FieldType (
 CREATE TABLE Answer (
     id SERIAL PRIMARY KEY,
     person_id INTEGER REFERENCES Person (id),
-    question_id INTEGER REFERENCES Question (id),
+    formquestion_id INTEGER REFERENCES FormQuestion (id),
     questionoption_id INTEGER REFERENCES QuestionOption (id),
     answer_text TEXT
 );
-
-
