@@ -81,6 +81,7 @@ def get_question_options(question_id):
             WHERE qo.question_id = :question_id;"
     result = db.session.execute(sql, {"question_id":question_id})
     question_options = to_dict_list(result.fetchall())
+    print("Optiolistan pituus funktiossa: " + str(len(question_options)))
     return question_options
 
 def publish_form(form_id):
