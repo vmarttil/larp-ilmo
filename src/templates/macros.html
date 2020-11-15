@@ -41,7 +41,7 @@
     <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
     <span class="question_desc">{{ question.description }}</span>
     <ul class="radiobuttons">
-      {% for option in question.options %}
+      {% for option in question['options'] %}
       <li>
         <input type="radio" id="{{ question.id }}_{{ option.id }}" name="radio_{{ question.id }}" value="{{ option.id }}"/>
         <label class="option_text" for="{{ question.id }}_{{ option.id }}" >{{ option.text }}</label>
@@ -80,7 +80,7 @@
     <label class="question_text" for="{{ question.id }}" >{{ question.text }} </label>
     <span class="question_desc">{{ question.description }}</span>
     <ul class="checkboxes">
-      {% for option in question.options %}
+      {% for option in question['options'] %}
       <li>
         <input type="checkbox" id="{{ question.id }}_{{ option.id }}" name="checkbox_{{ question.id }}_{{ option.id }}" value="{{ option.id }}"/>
         <label class="option_text" for="{{ question.id }}_{{ option.id }}" >{{ option.text }}</label>
