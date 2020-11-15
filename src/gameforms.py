@@ -55,7 +55,7 @@ def get_default_questions():
 
 def get_form_questions(form_id):
     sql =  "SELECT \
-                fq.id, \
+                q.id, \
                 ft.name AS field_type, \
                 q.question_text AS text, \
                 q.description, \
@@ -68,8 +68,7 @@ def get_form_questions(form_id):
             WHERE fq.form_id = :form_id \
             ORDER BY fq.position;"
     result = db.session.execute(sql, {"form_id":form_id})
-    option_list = result.fetchall()
-    form_questions = to_dict_list(option_list)
+    form_questions = to_dict_list(result.fetchall())
     return form_questions
 
 def get_question_options(question_id):
@@ -80,12 +79,8 @@ def get_question_options(question_id):
                 JOIN QuestionOption AS qo \
                     ON o.id = qo.option_id \
             WHERE qo.question_id = :question_id;"
-    print("Question id: " + str(question_id))
-    result = db.session.execute(sql, {"question_id":question_id})
-    option_list = result.fetchall()
-    print("Optiolistan pituus funktiossa: " + str(len(option_list)))
-    question_options = to_dict_list(option_list)
-    print("Optiodictlistan pituus funktiossa: " + str(len(question_options)))
+    result = db.session.execute(sql, {"question_id":question_id}) 
+    question_options = to_dict_list(result.fetchall())
     return question_options
 
 def publish_form(form_id):
