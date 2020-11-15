@@ -79,7 +79,8 @@ def get_question_options(question_id):
             FROM Option as o \
                 JOIN QuestionOption AS qo \
                     ON o.id = qo.option_id \
-            WHERE qo.question_id = 7;"
+            WHERE qo.question_id = :question_id;"
+    print("Question id: " + str(question_id))
     result = db.session.execute(sql, {"question_id":question_id})
     option_list = result.fetchall()
     print("Optiolistan pituus funktiossa: " + str(len(option_list)))
