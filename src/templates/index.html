@@ -25,7 +25,7 @@
     <td>{{ game['location'] }}</td>
     <td>{{ game['num_registrations'] }}</td>
     <td>
-      {% if game['published'] == True and session['user_id'] != 0 %}
+      {% if game['published'] == True and 'user_id' in session %}
         <a href="\game\{{ game['id'] }}\register">Ilmoittaudu</a>
       {% endif %}
     </td>
