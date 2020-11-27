@@ -1,21 +1,31 @@
 {% from "macros.html" import render_question with context %}
 
 {% extends "layout.html" %}
-{% block title %}{{ title }}{% endblock %}
-{% block content %}
-<form action='{{ action }}' method="post">
-  {{ form.hidden_tag() }}
-  <h1>{{ title }}</h1>
-  <p class="red">[Toistaiseksi käyttäjä voi vain julkaista oletuslomakkeen, muokkaustoiminnallisuus toteutetaan projektin seuraavassa vaiheessa.]</p>
-  {% for question in questions %}
-    {{ render_question(question) }}
-  {% endfor %}
-  <p>
-    {% if form.published.data == False %}
-      {{ form.publish() }}
-    {% else %}
-      {{ form.cancel() }}
-    {% endif %}
-  </p>
-</form>
-{% endblock %}
+{% block title %}LARP-ilmo - {{ title }}{% endblock %}
+{% block app_content %}
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>{{ title }}</h1>
+      </div>
+      <div class="panel-body">
+        <form id="registration_form" action='{{ action }}' method="post">
+          {{ form.hidden_tag() }}
+          <p class="red">[Toistaiseksi käyttäjä voi vain julkaista oletuslomakkeen, muokkaustoiminnallisuus toteutetaan
+            projektin seuraavassa vaiheessa.]</p>
+          {% for question in questions %}
+            {{ render_question(question) }}
+          {% endfor %}
+          {% if form.published.data == False %}
+            {{ wtf.form_field(form.publish, class='form-control btn-block') }}
+          {% else %}
+            {{ wtf.form_field(form.cancel, class='form-control btn-block') }}
+          {% endif %}
+        </form>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>

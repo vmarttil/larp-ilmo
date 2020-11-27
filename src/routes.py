@@ -1,6 +1,7 @@
 import sys
 from app import app
 from flask import render_template, request, redirect, flash, url_for
+import datetime
 import games, users, gameforms
 from forms import *
 
@@ -11,12 +12,12 @@ def index():
 
 @app.route("/game/new", methods=["get", "post"])
 def newgame():
-    form = GameForm()
+    form = GameForm(meta={'locales': ['fi_FI', 'fi']})
     if form.validate_on_submit():
         id = None
         name = request.form["name"]
-        start_date = request.form["start_date"]
-        end_date = request.form["end_date"]
+        start_date = datetime.datetime.strptime(request.form["start_date"], '%d.%m.%Y')
+        end_date = datetime.datetime.strptime(request.form["end_date"], '%d.%m.%Y')
         price = request.form["price"]        
         location = request.form["location"]
         description = request.form["description"]
@@ -31,17 +32,19 @@ def newgame():
 @app.route("/game/<game_id>/edit", methods=["get", "post"])
 def editgame(game_id):
     game = games.get_details(game_id)
+    game['start_date'] = game['start_date'].strftime('%d.%m.%Y')
+    game['end_date'] = game['end_date'].strftime('%d.%m.%Y')
     if users.user_id() not in map(lambda org: org['id'], game['organisers']):
         return redirect(url_for("index"))
-    form = GameForm(data=game)
+    form = GameForm(data=game, meta={'locales': ['fi_FI', 'fi']})
     if request.method == 'GET':
         has_form = False if gameforms.get_game_form(game_id) is None else True
         is_published = gameforms.is_published(game_id)
         return render_template("game_editor.html", form=form, action="/game/" + game_id + "/edit" , title=game['name'] + ": Tietojen päivitys", has_form=has_form, is_published=is_published)
     if form.validate_on_submit():
         name = request.form["name"]
-        start_date = request.form["start_date"]
-        end_date = request.form["end_date"]
+        start_date = datetime.datetime.strptime(request.form["start_date"], '%d.%m.%Y')
+        end_date = datetime.datetime.strptime(request.form["end_date"], '%d.%m.%Y')
         location = request.form["location"]
         price = request.form["price"]
         description = request.form["description"]
@@ -74,7 +77,7 @@ def editform(game_id):
     if request.method == 'GET':
         gameform = gameforms.get_game_form(game_id)
         form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
-        form = RegistrationForm(data=form_data)
+        form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
         questions = gameforms.get_default_questions() if gameforms.get_form_questions(gameform['id']) is None else gameforms.get_form_questions(gameform['id'])        
         for question in questions:
             question['options'] = gameforms.get_question_options(int(question['id']))
@@ -93,7 +96,7 @@ def gameregistration(game_id):
     game = games.get_details(game_id)
     gameform = gameforms.get_game_form(game_id)
     form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
-    form = RegistrationForm(data=form_data)
+    form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
     if request.method == 'GET':    
         questions = gameforms.get_form_questions(gameform['id'])        
         for question in questions:
@@ -115,7 +118,7 @@ def gameregistration(game_id):
 
 @app.route("/login", methods=["get","post"])
 def login():
-    form = LoginForm()
+    form = LoginForm(meta={'locales': ['fi_FI', 'fi']})
     if form.validate_on_submit():
         email = request.form["email"]
         password = request.form["password"]
@@ -133,7 +136,7 @@ def logout():
 
 @app.route("/register", methods=["get","post"])
 def register():
-    form = RegisterForm()
+    form = RegisterForm(meta={'locales': ['fi_FI', 'fi']})
     if form.validate_on_submit():
         email = request.form["email"]
         password = request.form["password"]
@@ -144,6 +147,7 @@ def register():
         birth_year = int(request.form["birth_year"])
         profile = request.form["profile"]    
         if users.register(email,password, first_name, last_name, nickname, gender, birth_year, profile):
+            flash("Käyttäjätunnus luotu")
             return redirect(url_for("index"))
         else:
             flash("Rekisteröinti ei onnistunut")

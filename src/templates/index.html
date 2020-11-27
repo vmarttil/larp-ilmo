@@ -1,40 +1,52 @@
 {% extends "layout.html" %}
-{% block title %}Etusivu{% endblock %}
-{% block content %}
-<h2>Etusivu</h2>
-<p>Tervetuloa LARP-ilmoon, palveluun jonka avulla voit ilmoittautua palvelussa julkaistuihin liveroolipeleihin 
-  tai luoda ilmoittautumislomakkeen omaa peliäsi varten ja hallinnoida sen kautta peliisi tehtyjä ilmoittautumisia.</p>
-<h3>Ilmoitetut pelit</h3>
-<table>
-  <tr>
-    <th>Nimi</th>
-    <th>Ajankohta</th>
-    <th>Paikkakunta</th>
-    <th>Ilmoittautumisia</th>
-  </tr>
-{% for game in games %}
-  <tr>
-    <td><a href="\game\{{ game['id'] }}">{{ game['name'] }}</a></td>
-    <td>
-      {% if game['end_date'] == game['start_date'] %}
-        {{ game['start_date']|formatdate }}
-      {% else %}
-        {{ format_daterange(game['start_date'], game['end_date']) }}
-      {% endif %}
-    </td>
-    <td>{{ game['location'] }}</td>
-    <td>{{ game['num_registrations'] }}</td>
-    <td>
-      {% if game['published'] == True and 'user_id' in session %}
-        <a href="\game\{{ game['id'] }}\register">Ilmoittaudu</a>
-      {% endif %}
-    </td>
-    <td>
-      {% if game['organiser_id'] == session['user_id'] %}
-        <a href="\game\{{ game['id'] }}\edit">Muokkaa</a>
-      {% endif %}
-    </td>
-  </tr>
-{% endfor %}
-</table>
+{% block title %}LARP-ilmo - Etusivu{% endblock %}
+{% block app_content %}
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>LARP-ilmo</h1>
+      </div>
+      <div class="panel-body">
+        <p>Tervetuloa LARP-ilmoon, palveluun jonka avulla voit ilmoittautua palvelussa julkaistuihin liveroolipeleihin
+          tai luoda ilmoittautumislomakkeen omaa peliäsi varten ja hallinnoida sen kautta peliisi tehtyjä
+          ilmoittautumisia.</p>
+        <h3>Ilmoitetut pelit</h3>
+        <table class="table-condensed">
+          <tr>
+            <th class="col-md-6">Nimi</th>
+            <th class="col-md-2">Ajankohta</th>
+            <th class="col-md-2">Paikkakunta</th>
+            <th class="col-md-1"></th>
+            <th class="col-md-1"></th>
+          </tr>
+          {% for game in games %}
+          <tr>
+            <td class="col-md-6"><a href="\game\{{ game['id'] }}">{{ game['name'] }}</a></td>
+            <td class="col-md-2">
+              {% if game['end_date'] == game['start_date'] %}
+              {{ game['start_date']|formatdate }}
+              {% else %}
+              {{ format_daterange(game['start_date'], game['end_date']) }}
+              {% endif %}
+            </td>
+            <td class="col-md-2">{{ game['location'] }}</td>
+            <td class="col-md-1">
+              {% if game['published'] == True and 'user_id' in session %}
+              <a href="\game\{{ game['id'] }}\register">Ilmoittaudu</a>
+              {% endif %}
+            </td>
+            <td class="col-md-1">
+              {% if game['organiser_id'] == session['user_id'] %}
+              <a href="\game\{{ game['id'] }}\edit">Muokkaa</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

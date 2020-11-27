@@ -1,3 +1,8 @@
+body {
+  position: absolute;
+  margin: 50px;
+}
+
 div.content {
   margin-bottom: 2em;
 }
@@ -20,7 +25,7 @@ label.question_text {
   font-weight: bold;
 }
 
-span.question_desc {
+#registration_form span.question_desc {
   display: block;
   font-size: 0.8em;
 

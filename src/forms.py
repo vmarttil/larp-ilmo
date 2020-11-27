@@ -2,48 +2,51 @@ import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, IntegerField, TextAreaField, DateField, HiddenField
 from wtforms.widgets import TextInput, TextArea, PasswordInput, CheckboxInput, SubmitInput, ListWidget, Select
-from wtforms.widgets.html5 import DateInput, EmailInput, NumberInput
-from wtforms.validators import DataRequired, Email, Length, NumberRange
+from wtforms.widgets.html5 import DateInput, DateTimeInput, EmailInput, NumberInput
+from wtforms.validators import DataRequired, Email, Length, NumberRange, Regexp, ValidationError
 
 class RegisterForm(FlaskForm):
-    email = StringField('Sähköpostiosoite: ', widget=EmailInput(), validators=[
+    email = StringField('Sähköpostiosoite', widget=EmailInput(), validators=[
         DataRequired(message="Sähköpostiosoite on pakollinen"),
         Email(message="Anna kelvollinen sähköpostiosoite")])
-    password = PasswordField('Salasana: ', widget=PasswordInput(), validators=[
+    password = PasswordField('Salasana', widget=PasswordInput(), validators=[
         DataRequired(message="Salasana on pakollinen"),
         Length(min=6, max=24, message="Salasanan on oltava 6-24 merkkiä pitkä")])
-    first_name = StringField('Etunimi: ', widget=TextInput(), validators=[
+    first_name = StringField('Etunimi', widget=TextInput(), validators=[
         DataRequired(message="Etunimi on pakollinen")])
-    last_name = StringField('Sukunimi: ', widget=TextInput(), validators=[
+    last_name = StringField('Sukunimi', widget=TextInput(), validators=[
         DataRequired(message="Sukunimi on pakollinen")])
-    nickname = StringField('Lempinimi: ', widget=TextInput())        
-    gender = RadioField('Sukupuoli: ', widget=ListWidget(), choices=[
+    nickname = StringField('Lempinimi', widget=TextInput())        
+    gender = RadioField('Sukupuoli', widget=ListWidget(), choices=[
         ('0', 'En halua kertoa'),
         ('1', 'Mies'),
         ('3', 'Nainen'),
         ('9', 'Muu')])
-    birth_year = IntegerField('Syntymävuosi: ', widget=NumberInput(), validators=[
-        NumberRange(min=int(datetime.datetime.now().year) - 99, max=int(datetime.datetime.now().year), message="Anna kelvollinen syntymävuosi")])
-    profile = TextAreaField('Pelaajaprofiilikuvaus: ', widget=TextArea(), validators=[
+    birth_year = StringField('Syntymävuosi', widget=TextInput(), validators=[
+        Regexp('(19[0-9]{1})|(20[0-2][0-9])', message='Anna kelvollinen syntymävuosi')])
+    profile = TextAreaField('Pelaajaprofiilikuvaus', widget=TextArea(), validators=[
         Length(min=10, max=1000, message="Profiilikuvauksen on oltava 10-1000 merkkiä pitkä")])
     submit = SubmitField('Rekisteröidy', widget=SubmitInput())
 
 class LoginForm(FlaskForm):
-    email = StringField('Sähköpostiosoite: ', widget=EmailInput(), validators=[
+    email = StringField('Sähköpostiosoite', widget=EmailInput(), validators=[
         DataRequired(message="Sähköpostiosoite on pakollinen")])
-    password = PasswordField('Salasana: ', widget=PasswordInput(), validators=[
+    password = PasswordField('Salasana', widget=PasswordInput(), validators=[
         DataRequired(message="Salasana on pakollinen")])
     submit = SubmitField('Kirjaudu', widget=SubmitInput())
 
 class GameForm(FlaskForm):
     id = HiddenField()
-    name = StringField('Pelin nimi: ', widget=TextInput(), validators=[
+    name = StringField('Pelin nimi', widget=TextInput(), validators=[
         DataRequired(message="Nimi on pakollinen")])
-    start_date = DateField('Pelin alkupäivämäärä: ', widget=DateInput())
-    end_date = DateField('Pelin loppupäivämäärä: ', widget=DateInput())
-    location = StringField('Pelin sijainti: ', widget=TextInput())
-    price = IntegerField('Pelin hinta: ', widget=NumberInput())
-    description = TextAreaField('Pelin kuvaus: ', widget=TextArea(), validators=[
+    start_date = StringField('Pelin alkupäivämäärä', widget=TextInput(), validators=[
+        Regexp('^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(20)\d\d$', message='Anna kelvollinen päivämäärä')])
+    end_date = StringField('Pelin loppupäivämäärä', widget=TextInput(), validators=[
+        Regexp('^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(20)\d\d$', message='Anna kelvollinen päivämäärä')])
+    location = StringField('Pelin sijainti', widget=TextInput())
+    price = IntegerField('Pelin hinta', widget=NumberInput(), validators=[
+        NumberRange(min=0, max=9999, message='Hinnan on oltava 0-9999')])
+    description = TextAreaField('Pelin kuvaus', widget=TextArea(), validators=[
         DataRequired(message="Kuvaus on pakollinen"),
         Length(min=10, max=1000, message="Kuvauksen on oltava 10-1000 merkkiä pitkä")])
     create_form = SubmitField('Luo ilmoittautumislomake', widget=SubmitInput())

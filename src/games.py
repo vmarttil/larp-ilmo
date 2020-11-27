@@ -28,9 +28,19 @@ def get_list():
     return game_list
 
 def get_details(id):
-    sql_game = "SELECT * \
-                    FROM Game \
-                    WHERE id = :id"
+    sql_game = "SELECT \
+                    g.id, \
+                    g.name, \
+                    g.start_date, \
+                    g.end_date, \
+                    g.location, \
+                    g.price, \
+                    g.description, \
+                    f.published \
+                    FROM Game AS g\
+                        LEFT JOIN Form AS f \
+                            ON g.id = f.game_id \
+                    WHERE g.id = :id"
     result_game = db.session.execute(sql_game, {"id":id})
     game = result_game.fetchone()
     sql_orgs =  "SELECT \

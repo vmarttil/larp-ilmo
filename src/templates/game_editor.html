@@ -1,52 +1,59 @@
 {% extends "layout.html" %}
-{% block title %}{{ title }}{% endblock %}
-{% block content %}
-<h1>{{ title }}</h1>
-<form action='{{ action }}' method="post">
-  {{ form.hidden_tag() }}
-  <p>
-    {{ form.name.label }}
-    {{ form.name(size=64) }}
-    {% for error in form.name.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  <p>
-    {{ form.start_date.label }}
-    {{ form.start_date() }}
-  </p>
-  <p>
-    {{ form.end_date.label }}
-    {{ form.end_date() }}
-  </p>
-  <p>
-    {{ form.location.label }}
-    {{ form.location(size=32) }}
-  </p>
-  <p>
-    {{ form.price.label }}
-    {{ form.price(size=4) }} €
-  </p>
-  <p>
-    {{ form.description.label }}
-    <br/>
-    {{ form.description(rows='12',cols='80') }}
-    {% for error in form.description.errors %}
-    <span style="color: red;">[{{ error }}]</span>
-    {% endfor %}
-  </p>
-  
-    {% if has_form == True %}
-      {% if is_published == True %}
-        <p>Ilmoittautuminen on avattu.</p>
-      {% else %}
-        <p>Ilmoittautumista ei ole avattu.</p>
-      {% endif %}
-      <p>{{ form.edit_form() }}</p>
-    {% else %}
-      <p>{{ form.create_form() }}</p>
-    {% endif %}
-  
-  <p>{{ form.submit() }}</p>
-</form>
+{% block title %}LARP-ilmo - {{ title }}{% endblock %}
+{% block app_content %}
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>{{ title }}</h1>
+      </div>
+      <div class="panel-body">
+        <form action='{{ action }}' method="post" novalidate>
+          {{ form.hidden_tag() }}
+          {{ wtf.form_field(form.name, class='form-control') }}
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                {{ wtf.form_field(form.start_date, class='form-control dp') }}
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                {{ wtf.form_field(form.end_date, class='form-control dp') }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                {{ wtf.form_field(form.location, class='form-control') }}
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                {{ wtf.form_field(form.price, class='form-control') }}
+              </div>
+            </div>
+            <span
+              style="font-size: 1.5em; display: inline-block; position: relative; top: 1.3em; right: 0.5em;">€</span>
+          </div>
+          {{ wtf.form_field(form.description, class='form-control', rows='12') }}
+          <p>
+            {% if has_form == True %}
+            {% if is_published == True %}
+          <p>Ilmoittautuminen on avattu.</p>
+          {% else %}
+          <p>Ilmoittautumista ei ole avattu.</p>
+          {% endif %}
+          {{ wtf.form_field(form.edit_form, class='form-control btn-block') }}
+          {% else %}
+          {{ wtf.form_field(form.create_form, class='form-control btn-block') }}
+          {% endif %}
+          {{ wtf.form_field(form.submit, class='form-control btn-primary btn-block') }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

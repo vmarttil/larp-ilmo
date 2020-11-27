@@ -1,25 +1,64 @@
 {% extends "layout.html" %}
-{% block title %}{{ game['name'] }}{% endblock %}
-{% block content %}
-<h1>{{ game['name'] }}</h1>
-<ul>
-  <li>
-    <span class="label">Ajankohta: </span>
-    {% if game['end_date'] == game['start_date'] %}
-      {{ game['start_date']|formatdate }}
-    {% else %}
-      {{ format_daterange(game['start_date'], game['end_date']) }}
-    {% endif %}
-  </li>
-  <li><span class="label">Paikka: </span>{{ game['location'] }}</li>
-  <li><span class="label">Hinta: </span>{{ game['price'] }} €</li>
-  <li><span class="label">Järjestäjät: </span>
-    <ul>
-    {% for organiser in game['organisers'] %}
-      <li> {{ format_name(organiser['first_name'], organiser['last_name'], organiser['nickname']) }} </li>
-    {% endfor %}
-    </ul>
-  </li>
-</ul>
-<p>{{ game['description'] }}</p>
-{% endblock %}
+{% block title %}LARP-ilmo - {{ game['name'] }}{% endblock %}
+{% block app_content %}
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2>
+          {{ game['name'] }}
+          {% if game['published'] == True and 'user_id' in session %}
+            &nbsp;<a class="btn btn-primary btn-xs" href="\game\{{ game['id'] }}\register" role="button">Ilmoittaudu</a>
+          {% endif %}
+        </h2>
+      </div>
+      <div class="panel-body">
+        <div class="form-horizontal">
+          <div class="row">
+            <label class="col-md-2 control-label">Ajankohta</label>
+            <div class="col-md-10">
+              <p class="form-control-static">
+                {% if game['end_date'] == game['start_date'] %}
+                {{ game['start_date']|formatdate }}
+                {% else %}
+                {{ format_daterange(game['start_date'], game['end_date']) }}
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-2 control-label">Paikka</label>
+            <div class="col-md-10">
+              <p class="form-control-static">{{ game['location'] }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-2 control-label">Hinta</label>
+            <div class="col-md-10">
+              <p class="form-control-static">{{ game['price'] }} €</p>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-md-2 control-label">Järjestäjät</label>
+            <div class="col-md-10">
+              <p class="form-control-static">
+                {% for organiser in game['organisers'] %}
+                {{ format_name(organiser['first_name'], organiser['last_name'], organiser['nickname']) }}<br />
+                {% endfor %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-10">
+            <p>{{ game['description'] }}</p>
+          </div>
+        </div>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>

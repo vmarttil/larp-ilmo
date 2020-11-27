@@ -8,6 +8,7 @@ def login(email,password):
     result = db.session.execute(sql, {"email":email})
     user = result.fetchone()
     if user == None:
+        print("Sisäänkirjaus epäonnistui.")
         return False
     else:
         if check_password_hash(user[0],password):
@@ -15,6 +16,7 @@ def login(email,password):
             session['user_name'] = format_name(user[2], user[3], user[4])
             return True
         else:
+            print("Sisäänkirjaus epäonnistui.")
             return False
 
 def logout():
@@ -23,12 +25,14 @@ def logout():
 
 def register(email,password, first_name, last_name, nickname, gender, birth_year, profile):
     hash_value = generate_password_hash(password)
+    print("Email: " + email + " Password: " + password + " First name: " + first_name + " Last name: " + last_name + " Nickname: " + nickname + " Gender: " + str(gender) + " Birth year: " + str(birth_year) + " Profile: " + profile)
     try:
         sql = "INSERT INTO Person (email, password, first_name, last_name, nickname, gender, birth_year, profile) VALUES (:email, :password, :first_name, :last_name, :nickname, :gender, :birth_year, :profile)"
         db.session.execute(sql, {"email":email, "password":hash_value, "first_name":first_name, "last_name":last_name, "nickname":nickname, "gender":gender, "birth_year":birth_year, "profile":profile})
         db.session.commit()
     except:
         return False
+    print("Käyttäjätunnuksen tallennus onnistui.")
     return login(email,password)
 
 def user_id():
