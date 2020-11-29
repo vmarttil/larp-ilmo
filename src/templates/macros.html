@@ -26,6 +26,7 @@
       {% if question.prefill_tag != None %}
       <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text"
         value="{{ prefill_data[question.prefill_tag] }}" required disabled>
+      <input type="hidden" id="{{ question.id }}_hidden" name="string_{{ question.id }}" value="{{ prefill_data[question.prefill_tag] }}">
       {% else %}
       <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text" value required>
       {% endif %}
@@ -44,6 +45,7 @@
       {% if question.prefill_tag != None %}
       <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number"
         value="{{ prefill_data[question.prefill_tag] }}" required disabled>
+      <input type="hidden" id="{{ question.id }}_hidden" name="string_{{ question.id }}" value="{{ prefill_data[question.prefill_tag] }}">
       {% else %}
       <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number" value required>
       {% endif %}

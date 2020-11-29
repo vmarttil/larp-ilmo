@@ -39,22 +39,22 @@ def get_form_by_id(form_id):
         result = None
     return result
 
-def get_default_questions():
-    sql =  "SELECT \
-                q.id, \
-                ft.name AS field_type, \
-                q.question_text AS text, \
-                q.description, \
-                q.is_default, \
-                q.is_optional, \
-                q.prefill_tag \
-            FROM Question AS q \
-                JOIN FieldType AS ft \
-                    ON q.field_type = ft.id \
-            WHERE q.is_default = True;"
-    result = db.session.execute(sql)
-    default_questions = to_dict_list(result.fetchall())
-    return default_questions
+# def get_default_questions():
+#     sql =  "SELECT \
+#                 q.id, \
+#                 ft.name AS field_type, \
+#                 q.question_text AS text, \
+#                 q.description, \
+#                 q.is_default, \
+#                 q.is_optional, \
+#                 q.prefill_tag \
+#             FROM Question AS q \
+#                 JOIN FieldType AS ft \
+#                     ON q.field_type = ft.id \
+#             WHERE q.is_default = True;"
+#     result = db.session.execute(sql)
+#     default_questions = to_dict_list(result.fetchall())
+#     return default_questions
 
 def get_form_questions(form_id):
     sql =  "SELECT \
@@ -77,15 +77,19 @@ def get_form_questions(form_id):
     form_questions = to_dict_list(result.fetchall())
     return form_questions
 
-def get_question_options(question_id):
+def get_question_options(formquestion_id):
     sql =  "SELECT \
                 qo.id, \
                 o.option_text AS text \
             FROM Option as o \
                 JOIN QuestionOption AS qo \
                     ON o.id = qo.option_id \
-            WHERE qo.question_id = :question_id;"
-    result = db.session.execute(sql, {"question_id":question_id}) 
+                JOIN Question AS q \
+                    ON qo.question_id = q.id \
+                JOIN FormQuestion AS fq \
+                    ON q.id = fq.question_id \
+            WHERE fq.id = :formquestion_id;"
+    result = db.session.execute(sql, {"formquestion_id":formquestion_id}) 
     question_options = to_dict_list(result.fetchall())
     return question_options
 
