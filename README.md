@@ -24,7 +24,7 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 - palvelussa julkaistujen pelien tarkastelu &#x2713;
 - ilmoittautumislomakkeen täyttäminen &#x2713; 
 - omien tietojen täyttäminen automaattisesti käyttäjäprofiilista &#x2713;
-- ilmoittautumislomakkeen lähettäminen &#x2713; (rikkoutunut - ilmoittautuminen ei tallennu oikein)
+- ilmoittautumislomakkeen lähettäminen &#x2713;
 
 ## Tarvittavat sivut / näkymät
 - sisäänkirjaus &#x2713;
@@ -83,9 +83,5 @@ klikkaamalla etusivun listassa olevaa "Ilmoittaudu" -linkkiä ja täyttämällä
 on täytetty ja käyttäjä klikkaa sivun alareunassa olevaa "Ilmoittaudu"-painiketta, ilmoittautumisen tiedot tallennetaan 
 tietokantaan ja sovellus palauttaa käyttäjän pääsivulle. Käyttäjä voi tarkastella omia ilmoittautumisiaan omalla profiilisivulla
 ja pelin luonut käyttäjä näkee pelin tietojen alla siihen tehdyt ilmoittautumiset.
-
-**NB!** Ilmoittautumislomakkeen muokkausta toteutettaessa ilmoittautumisten tallentaminen tietokantaan ja niiden haku 
-rikkoutui ja huomasin tämän vasta viime hetkellä, joten tällä hetkellä ilmoittautumiset eivät tallennu oikein, eikä niitä
-näin ollen voi myöskään tarkastella em. paikoissa.
 
 
