@@ -13,8 +13,8 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 - tunnuksen luonti &#x2713;
 - pelin tietojen syöttäminen &#x2713;
 - ilmoittautumislomakkeen luonti &#x2713;
-- kysymysten lisääminen lomakkeeseen
-- uusien kysymysten luonti (kenttätyyppi + vastausvaihtoehdot)
+- kysymysten lisääminen lomakkeeseen &#x2713; (osittain)
+- uusien kysymysten luonti (kenttätyyppi + vastausvaihtoehdot) &#x2713; (osittain)
 - lomakkeen julkaiseminen &#x2713;
 - täytettyjen lomakkeiden vastausten tarkastelu &#x2713;
 - pelin ilmoittautumisten tallennus json-tiedostona
@@ -22,9 +22,9 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 ### Käyttäjälle
 - tunnuksen luonti &#x2713;
 - palvelussa julkaistujen pelien tarkastelu &#x2713;
-- ilmoittautumislomakkeen täyttäminen &#x2713;
+- ilmoittautumislomakkeen täyttäminen &#x2713; 
 - omien tietojen täyttäminen automaattisesti käyttäjäprofiilista &#x2713;
-- ilmoittautumislomakkeen lähettäminen &#x2713;
+- ilmoittautumislomakkeen lähettäminen &#x2713; (rikkoutunut - ilmoittautuminen ei tallennu oikein)
 
 ## Tarvittavat sivut / näkymät
 - sisäänkirjaus &#x2713;
@@ -33,7 +33,7 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 - pelin luonti &#x2713;
 - pelin tietojen muokkaaminen &#x2713;
 - ilmoittautumislomakkeen luonti &#x2713;
-- uuden kysymyksen luonti
+- uuden kysymyksen luonti &#x2713; (osittain)
 - julkaistut pelit &#x2713;
 - ilmoittautumislomakkeen täyttö &#x2713;
 - ilmoittautumisluettelo &#x2713;
@@ -51,7 +51,8 @@ Sovellus on testattavissa osoitteessa [https://larp-ilmo.herokuapp.com/](https:/
 Sovelluksen pääsivulla näkyy lista sovelluksessa julkaistuista peleistä ja niiden tietoja on mahdollista
 tarkastella (myös kirjautumatta sovellukseen) klikkaamalla pelin nimeä listassa. Sivun yläreunassa on linkit 
 sovellukseen rekisteröitymistä ja rekisteröityneiden käyttäjien sisäänkirjautumista varten. Rekisteröitymällä
-on mahdollista luoda omia pelejä ja ilmoittautua muiden luomiin peleihin.
+on mahdollista luoda omia pelejä ja ilmoittautua muiden luomiin peleihin. Rekisteröityneet käyttäjät voivat 
+muokata profiiliaan ja tarkastella omia ilmoittautumisiaan napsauttamalla omaa nimeään yläpalkissa.
 
 ### Pelin luonti
 
@@ -64,21 +65,27 @@ pelille ilmoittautumislomakkeen.
 ### Ilmoittautumislomakkeen luonti
 
 Pelin luonti- ja muokkausivun painike "Luo ilmoittautumislomake" luo pelille ilmoittautumislomakkeen ja avaa sen
-näkyviin. Tässä vaiheessa lomakkeessa on oletuskysymykset, joita ei pysty vielä muokkaamaan; lopullisessa versiossa 
-käyttäjä voi poistaa oletuskysymyksiä ja luoda itse uusia kysymyksiä valmiiksi määriteltyjen kenttätyyppien pohjalta 
-ja lisätä niitä ilmoittautumiseen. Ilmoittautumislomakkeen muokkausnäkymän alareunassa on "Avaa ilmoittautuminen" 
--painike, joka julkaisee ilmoittautumislomakkeen siten, että kaikki sisään kirjautuneet käyttäjät pystyvät ilmoittautumaan 
-peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta. Kun ilmoittautuminen on avattu, "Avaa ilmoittautuminen" -painike 
-korvautuu "Sulje ilmoittautuminen" -painikkeella, joka poistaa ilmoittautumislinkin pääsivun listasta ja estää uusien 
-ilmoittautumisten tekemisen.
+näkyviin. Aluksi lomakkeessa on oletuskysymykset, ja tällä hetkellä käyttäjä voi vaihdella niiden järjestystä ja 
+lisätä lomakkeeseen uusia tekstikenttä, numerokenttä ja tekstialue-tyyppisiä kysymyksiä. Kysymysten muokkaamista 
+ja poistamista eikä valintoja sisältävien kysymysten ja niiden valintojen lisäämistä ei ole vielä toteutettu; 
+lopullisessa versiossa käyttäjä voi poistaa kysymyksiä, muokata niitä ja luoda myös valintatyyppisiä kysymyksiä. 
+Ilmoittautumislomakkeen muokkausnäkymän alareunassa on "Avaa ilmoittautuminen" -painike, joka julkaisee 
+ilmoittautumislomakkeen siten, että kaikki sisään kirjautuneet käyttäjät pystyvät ilmoittautumaan 
+peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta. Kun ilmoittautuminen on avattu, "Avaa ilmoittautuminen" 
+-painike korvautuu "Sulje ilmoittautuminen" -painikkeella, joka poistaa ilmoittautumislinkin pääsivun listasta ja 
+estää uusien ilmoittautumisten tekemisen. Muokkausnäkymän alareunassa on myös painike, jolla lomaketta voi esikatsella 
+siinä muodossa kun se tulee näkymään käyttäjälle, mutta ilman täyttömahdollisuuta.
 
 ### Ilmoittautuminen
 
 Kun pelin luonut käyttäjä on avannut pelin ilmoittautumisen, kuka tahansa kirjautunut käyttäjä voi ilmoittautua peliin 
 klikkaamalla etusivun listassa olevaa "Ilmoittaudu" -linkkiä ja täyttämällä avautuvan ilmoittautumislomakkeen. Kun lomake 
 on täytetty ja käyttäjä klikkaa sivun alareunassa olevaa "Ilmoittaudu"-painiketta, ilmoittautumisen tiedot tallennetaan 
-tietokantaan ja sovellus palauttaa käyttäjän pääsivulle. Ilmoittautumisia ei toistaiseksi pääse vielä tarkastelemaan, mutta 
-valmiissa versiossa kaikilla käyttäjillä tulee mahdollisuus tarkastella omia ilmoittautumisiaan ja pelin luonut käyttäjä 
-voi tarkastella kaikkia oman pelinsä ilmoittautumisia ja ladata ne json-tiedostona.
+tietokantaan ja sovellus palauttaa käyttäjän pääsivulle. Käyttäjä voi tarkastella omia ilmoittautumisiaan omalla profiilisivulla
+ja pelin luonut käyttäjä näkee pelin tietojen alla siihen tehdyt ilmoittautumiset.
+
+**NB!** Ilmoittautumislomakkeen muokkausta toteutettaessa ilmoittautumisten tallentaminen tietokantaan ja niiden haku 
+rikkoutui ja huomasin tämän vasta viime hetkellä, joten tällä hetkellä ilmoittautumiset eivät tallennu oikein, eikä niitä
+näin ollen voi myöskään tarkastella em. paikoissa.
 
 
