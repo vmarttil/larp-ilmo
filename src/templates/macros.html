@@ -1,32 +1,33 @@
 <!-- Macro for rendering different types of questions in the registration form -->
 {% macro render_question(question) %}
-  {% if question['field_type'] == 'StringField' %}
-    {{ render_string_field(question) }}
-  {% elif question['field_type'] == 'IntegerField' %}
-    {{ render_integer_field(question) }}
-  {% elif question['field_type'] == 'RadioField' %}
-    {{ render_radio_field(question) }}
-  {% elif question['field_type'] == 'SelectField' %}
-    {{ render_select_field(question) }}
-  {% elif question['field_type'] == 'SelectMultipleField' %}
-    {{ render_select_multiple_field(question) }}
-  {% elif question['field_type'] == 'TextAreaField' %}
-    {{ render_text_area_field(question) }}
-  {% elif question['field_type'] == 'CheckboxListField' %}
-    {{ render_checkbox_list_field(question) }}
-  {% endif %}
+{% if question['field_type'] == 'StringField' %}
+{{ render_string_field(question) }}
+{% elif question['field_type'] == 'IntegerField' %}
+{{ render_integer_field(question) }}
+{% elif question['field_type'] == 'RadioField' %}
+{{ render_radio_field(question) }}
+{% elif question['field_type'] == 'SelectField' %}
+{{ render_select_field(question) }}
+{% elif question['field_type'] == 'SelectMultipleField' %}
+{{ render_select_multiple_field(question) }}
+{% elif question['field_type'] == 'TextAreaField' %}
+{{ render_text_area_field(question) }}
+{% elif question['field_type'] == 'CheckboxListField' %}
+{{ render_checkbox_list_field(question) }}
+{% endif %}
 {% endmacro %}
 
 <!-- Macro for rendering questions of type StringField -->
 {% macro render_string_field(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       {% if question.prefill_tag != None %}
-        <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text" value="{{ prefill_data[question.prefill_tag] }}" required disabled>
+      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text"
+        value="{{ prefill_data[question.prefill_tag] }}" required disabled>
       {% else %}
-        <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text" value required>
+      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text" value required>
       {% endif %}
       <span class="question_desc">{{ question.description }}</span>
     </div>
@@ -37,13 +38,14 @@
 <!-- Macro for rendering questions of type IntegerField -->
 {% macro render_integer_field(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       {% if question.prefill_tag != None %}
-        <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number" value="{{ prefill_data[question.prefill_tag] }}" required disabled>
+      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number"
+        value="{{ prefill_data[question.prefill_tag] }}" required disabled>
       {% else %}
-        <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number" value required>
+      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number" value required>
       {% endif %}
       <span class="question_desc">{{ question.description }}</span>
     </div>
@@ -54,17 +56,18 @@
 <!-- Macro for rendering questions of type RadioField -->
 {% macro render_radio_field(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <span class="question_desc">{{ question.description }}</span>
       {% for option in question['options'] %}
-        <div class="radio">
-          <label>
-            <input type="radio" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" />
-            {{ option.text }}
-          </label>
-        </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"
+            value="{{ option.id }}" />
+          {{ option.text }}
+        </label>
+      </div>
       {% endfor %}
     </div>
   </div>
@@ -74,7 +77,7 @@
 <!-- Macro for rendering questions of type SelectField -->
 {% macro render_select_field(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="question_text">[To be implemented]</p>
     </div>
@@ -85,7 +88,7 @@
 <!-- Macro for rendering questions of type SelectMultipleField -->
 {% macro render_select_multiple_field(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="question_text">[To be implemented]</p>
     </div>
@@ -96,12 +99,13 @@
 <!-- Macro for rendering questions of type TextAreaField -->
 {% macro render_text_area_field(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <span class="question_desc">{{ question.description }}</span>
       {% if question.prefill_tag != None %}
-        <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12">{{ prefill_data[question.prefill_tag] }}</textarea>  
+      <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}"
+        rows="12">{{ prefill_data[question.prefill_tag] }}</textarea>
       {% else %}
       <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12"></textarea>
       {% endif %}
@@ -113,49 +117,50 @@
 <!-- Macro for rendering questions of type CheckboxListField -->
 {% macro render_checkbox_list_field(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <span class="question_desc">{{ question.description }}</span>
       {% for option in question['options'] %}
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" name="checkbox_{{ question.id }}_{{ option.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" />
-            {{ option.text }}
-          </label>
-        </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="checkbox_{{ question.id }}_{{ option.id }}"
+            id="{{ question.id }}_{{ option.id }}" value="{{ option.id }}" />
+          {{ option.text }}
+        </label>
+      </div>
       {% endfor %}
     </div>
   </div>
 </div>
 {% endmacro %}
 
-<!-- Macro for rendering disabled versions of different types of questions in the form editor -->
+<!-- Macro for rendering disabled versions of different types of questions in the form preview -->
 {% macro render_question_disabled(question) %}
-  {% if question['field_type'] == 'StringField' %}
-    {{ render_string_field_disabled(question) }}
-  {% elif question['field_type'] == 'IntegerField' %}
-    {{ render_integer_field_disabled(question) }}
-  {% elif question['field_type'] == 'RadioField' %}
-    {{ render_radio_field_disabled(question) }}
-  {% elif question['field_type'] == 'SelectField' %}
-    {{ render_select_field_disabled(question) }}
-  {% elif question['field_type'] == 'SelectMultipleField' %}
-    {{ render_select_multiple_field_disabled(question) }}
-  {% elif question['field_type'] == 'TextAreaField' %}
-    {{ render_text_area_field_disabled(question) }}
-  {% elif question['field_type'] == 'CheckboxListField' %}
-    {{ render_checkbox_list_field_disabled(question) }}
-  {% endif %}
+{% if question['field_type'] == 'StringField' %}
+{{ render_string_field_disabled(question) }}
+{% elif question['field_type'] == 'IntegerField' %}
+{{ render_integer_field_disabled(question) }}
+{% elif question['field_type'] == 'RadioField' %}
+{{ render_radio_field_disabled(question) }}
+{% elif question['field_type'] == 'SelectField' %}
+{{ render_select_field_disabled(question) }}
+{% elif question['field_type'] == 'SelectMultipleField' %}
+{{ render_select_multiple_field_disabled(question) }}
+{% elif question['field_type'] == 'TextAreaField' %}
+{{ render_text_area_field_disabled(question) }}
+{% elif question['field_type'] == 'CheckboxListField' %}
+{{ render_checkbox_list_field_disabled(question) }}
+{% endif %}
 {% endmacro %}
 
 <!-- Macro for rendering disabled versions of questions of type StringField -->
 {% macro render_string_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
-      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text" value>
+      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="text" disabled>
       <span class="question_desc">{{ question.description }}</span>
     </div>
   </div>
@@ -165,10 +170,10 @@
 <!-- Macro for rendering disabled versions of questions of type IntegerField -->
 {% macro render_integer_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
-      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number" value>
+      <input class="form-control" id="{{ question.id }}" name="string_{{ question.id }}" type="number" disabled>
       <span class="question_desc">{{ question.description }}</span>
     </div>
   </div>
@@ -178,17 +183,18 @@
 <!-- Macro for rendering disabled versions of questions of type RadioField -->
 {% macro render_radio_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <span class="question_desc">{{ question.description }}</span>
       {% for option in question['options'] %}
-        <div class="radio">
-          <label>
-            <input type="radio" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" />
-            {{ option.text }}
-          </label>
-        </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"
+            value="{{ option.id }}" disabled />
+          {{ option.text }}
+        </label>
+      </div>
       {% endfor %}
     </div>
   </div>
@@ -198,7 +204,7 @@
 <!-- Macro for rendering disabled versions of questions of type SelectField -->
 {% macro render_select_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="question_text">[To be implemented]</p>
     </div>
@@ -209,7 +215,7 @@
 <!-- Macro for rendering disabled versions of questions of type SelectMultipleField -->
 {% macro render_select_multiple_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="question_text">[To be implemented]</p>
     </div>
@@ -220,11 +226,12 @@
 <!-- Macro for rendering disabled versions of questions of type TextAreaField -->
 {% macro render_text_area_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <span class="question_desc">{{ question.description }}</span>
-      <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12"></textarea>
+      <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12"
+        disabled></textarea>
     </div>
   </div>
 </div>
@@ -233,49 +240,47 @@
 <!-- Macro for rendering disabled versions of questions of type CheckboxListField -->
 {% macro render_checkbox_list_field_disabled(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <span class="question_desc">{{ question.description }}</span>
       {% for option in question['options'] %}
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" name="checkbox_{{ question.id }}_{{ option.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" />
-            {{ option.text }}
-          </label>
-        </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="checkbox_{{ question.id }}_{{ option.id }}"
+            id="{{ question.id }}_{{ option.id }}" value="{{ option.id }}" disabled />
+          {{ option.text }}
+        </label>
+      </div>
       {% endfor %}
     </div>
   </div>
 </div>
 {% endmacro %}
 
-
-
-
-<!-- Macro for rendering filled versions of different types of questions in the form editor -->
+<!-- Macro for rendering filled versions of different types of questions in the registration preview -->
 {% macro render_question_filled(question) %}
-  {% if question['field_type'] == 'StringField' %}
-    {{ render_string_field_filled(question) }}
-  {% elif question['field_type'] == 'IntegerField' %}
-    {{ render_integer_field_filled(question) }}
-  {% elif question['field_type'] == 'RadioField' %}
-    {{ render_radio_field_filled(question) }}
-  {% elif question['field_type'] == 'SelectField' %}
-    {{ render_select_field_filled(question) }}
-  {% elif question['field_type'] == 'SelectMultipleField' %}
-    {{ render_select_multiple_field_filled(question) }}
-  {% elif question['field_type'] == 'TextAreaField' %}
-    {{ render_text_area_field_filled(question) }}
-  {% elif question['field_type'] == 'CheckboxListField' %}
-    {{ render_checkbox_list_field_filled(question) }}
-  {% endif %}
+{% if question['field_type'] == 'StringField' %}
+{{ render_string_field_filled(question) }}
+{% elif question['field_type'] == 'IntegerField' %}
+{{ render_integer_field_filled(question) }}
+{% elif question['field_type'] == 'RadioField' %}
+{{ render_radio_field_filled(question) }}
+{% elif question['field_type'] == 'SelectField' %}
+{{ render_select_field_filled(question) }}
+{% elif question['field_type'] == 'SelectMultipleField' %}
+{{ render_select_multiple_field_filled(question) }}
+{% elif question['field_type'] == 'TextAreaField' %}
+{{ render_text_area_field_filled(question) }}
+{% elif question['field_type'] == 'CheckboxListField' %}
+{{ render_checkbox_list_field_filled(question) }}
+{% endif %}
 {% endmacro %}
 
 <!-- Macro for rendering filled versions of questions of type StringField -->
 {% macro render_string_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <p class="form-control-static">{{ question.answer }}</p>
@@ -287,7 +292,7 @@
 <!-- Macro for rendering filled versions of questions of type IntegerField -->
 {% macro render_integer_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <p class="form-control-static">{{ question.answer }}</p>
@@ -299,20 +304,22 @@
 <!-- Macro for rendering filled versions of questions of type RadioField -->
 {% macro render_radio_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       {% for option in question['options'] %}
-        <div class="radio">
-          <label class="inactive">
+      <div class="radio">
+        <label class="inactive">
           {% if option.id in question.answer %}
-            <input type="radio" class="inactive" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" checked />
+          <input type="radio" class="inactive" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"
+            value="{{ option.id }}" checked />
           {% else %}
-            <input type="radio" class="inactive" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" disabled />
+          <input type="radio" class="inactive" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"
+            value="{{ option.id }}" disabled />
           {% endif %}
-            {{ option.text }}
-          </label>
-        </div>
+          {{ option.text }}
+        </label>
+      </div>
       {% endfor %}
     </div>
   </div>
@@ -322,7 +329,7 @@
 <!-- Macro for rendering filled versions of questions of type SelectField -->
 {% macro render_select_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="question_text">[To be implemented]</p>
     </div>
@@ -333,7 +340,7 @@
 <!-- Macro for rendering filled versions of questions of type SelectMultipleField -->
 {% macro render_select_multiple_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-md-6">
     <div class="form-group">
       <label class="question_text">[To be implemented]</p>
     </div>
@@ -344,7 +351,7 @@
 <!-- Macro for rendering filled versions of questions of type TextAreaField -->
 {% macro render_text_area_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       <p class="form-control-static">{{ question.answer }}</p>
@@ -356,21 +363,105 @@
 <!-- Macro for rendering filled versions of questions of type CheckboxListField -->
 {% macro render_checkbox_list_field_filled(question) %}
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="form-group">
       <label class="control-label" for="{{ question.id }}">{{ question.text }}</label>
       {% for option in question['options'] %}
-        <div class="checkbox">
-          <label class="inactive">
+      <div class="checkbox">
+        <label class="inactive">
           {% if option.id in question.answer %}
-            <input type="checkbox" class="inactive" name="checkbox_{{ question.id }}_{{ option.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" checked/>
+          <input type="checkbox" class="inactive" name="checkbox_{{ question.id }}_{{ option.id }}"
+            id="{{ question.id }}_{{ option.id }}" value="{{ option.id }}" checked />
           {% else %}
-            <input type="checkbox" class="inactive" name="checkbox_{{ question.id }}_{{ option.id }}" id="{{ question.id }}_{{ option.id }}"  value="{{ option.id }}" disabled/>
-          {% endif %}            
-            {{ option.text }}
-          </label>
-        </div>
+          <input type="checkbox" class="inactive" name="checkbox_{{ question.id }}_{{ option.id }}"
+            id="{{ question.id }}_{{ option.id }}" value="{{ option.id }}" disabled />
+          {% endif %}
+          {{ option.text }}
+        </label>
+      </div>
       {% endfor %}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+<!-- Macro for rendering placeholder versions of questions in the form editor -->
+{% macro render_question_placeholder(question) %}
+<div class="panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-md-9">
+        <label>{{ question.position }}. {{ question.text }}</label>
+      </div>  
+      <div class="col-md-3">
+        <div class="pull-right">
+          {% if question['is_optional'] == True %}
+          <button class="btn btn-xs" name="edit" type="submit" formaction="/game/{{ game.id }}/form/edit/edit"
+            formmethod="POST" value="{{ question.id }}">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+          </button>
+          <button class="btn btn-xs" name="delete" type="submit" formaction="/game/{{ game.id }}/form/edit/delete"
+            formmethod="POST" value="{{ question.id }}">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+          </button>
+          {% endif %}
+          <button class="btn btn-xs" name="move_up" type="submit" formaction="/game/{{ game.id }}/form/edit/move_up"
+            formmethod="POST" value="{{ question.position }}">
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+          </button>
+          <button class="btn btn-xs" name="move_down" type="submit" formaction="/game/{{ game.id }}/form/edit/move_down"
+            formmethod="POST" value="{{ question.position }}">
+            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-1">
+        {% if question['field_type'] == 'StringField' %}
+        <img src="{{url_for('.static', filename='images/noun_text field_116281.svg')}}" style="height: 2em;"
+          alt="Text field by Arthur Shlain from the Noun Project" />
+        {% elif question['field_type'] == 'IntegerField' %}
+        <img src="{{url_for('.static', filename='images/noun_Input_116304.svg')}}" style="height: 2em;"
+          alt="Input by Arthur Shlain from the Noun Project" />
+        {% elif question['field_type'] == 'RadioField' %}
+        <img src="{{url_for('.static', filename='images/noun_radio button_116305.svg')}}" style="height: 2em;"
+          alt="Radio button by Arthur Shlain from the Noun Project" />
+        {% elif question['field_type'] == 'SelectField' %}
+        <img src="{{url_for('.static', filename='images/noun_select_116285.svg')}}" style="height: 2em;"
+          alt="Select by Arthur Shlain from the Noun Project" />
+        {% elif question['field_type'] == 'SelectMultipleField' %}
+        <img src="{{url_for('.static', filename='images/noun_select_116285.svg')}}" style="height: 2em;"
+          alt="Select by Arthur Shlain from the Noun Project" />
+        {% elif question['field_type'] == 'TextAreaField' %}
+        <img src="{{url_for('.static', filename='images/noun_textarea_116328.svg')}}" style="height: 2em;"
+          alt="Textarea by Arthur Shlain from the Noun Project" />
+        {% elif question['field_type'] == 'CheckboxListField' %}
+        <img src="{{url_for('.static', filename='images/noun_Checklist_116311.svg')}}" style="height: 2em;"
+          alt="Checklist by Arthur Shlain from the Noun Project" />
+        {% endif %}
+      </div>
+      {% if question['field_type'] == 'RadioField' or question['field_type'] == 'CheckboxListField' or question['field_type'] == 'SelectField' or question['field_type'] == 'SelectMultipleField' %}
+      <div class="col-md-7 small">
+        {{ question.description }}
+      </div>
+      <div class="col-md-1 small">
+        <label>Valinnat:</label>
+      </div>
+      <div class="col-md-3 small">
+        <ul>
+          {% for option in question['options'] %}
+          <li>{{ option.text }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% else %}
+      <div class="col-md-11 small">
+        {{ question.description }}
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

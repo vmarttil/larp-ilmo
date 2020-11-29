@@ -1,6 +1,6 @@
 import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, IntegerField, TextAreaField, DateField, HiddenField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, RadioField, IntegerField, TextAreaField, DateField, HiddenField, SelectField
 from wtforms.widgets import TextInput, TextArea, PasswordInput, CheckboxInput, SubmitInput, ListWidget, Select
 from wtforms.widgets.html5 import DateInput, DateTimeInput, EmailInput, NumberInput
 from wtforms.validators import DataRequired, Email, Length, NumberRange, Regexp, ValidationError
@@ -68,7 +68,9 @@ class GameForm(FlaskForm):
         Length(min=10, max=1000, message="Kuvauksen on oltava 10-1000 merkkiä pitkä")])
     create_form = SubmitField('Luo ilmoittautumislomake', widget=SubmitInput())
     edit_form = SubmitField('Muokkaa ilmoittautumislomaketta', widget=SubmitInput())
-    submit = SubmitField('Tallenna peli', widget=SubmitInput())
+    publish_form = SubmitField('Avaa ilmoittautuminen', widget=SubmitInput())
+    unpublish_form = SubmitField('Sulje ilmoittautuminen', widget=SubmitInput())
+    submit = SubmitField('Tallenna pelin tiedot', widget=SubmitInput())
 
 class RegistrationForm(FlaskForm):
     form_id = HiddenField()
@@ -77,3 +79,18 @@ class RegistrationForm(FlaskForm):
     publish = SubmitField('Avaa ilmoittautuminen', widget=SubmitInput())
     cancel = SubmitField('Sulje ilmoittautuminen', widget=SubmitInput())
     submit = SubmitField('Ilmoittaudu', widget=SubmitInput())
+
+class FormEditForm(FlaskForm):
+    form_id = HiddenField()
+    form_name = HiddenField()
+    add_question = SubmitField('Lisää', widget=SubmitInput())
+
+class NewQuestionForm(FlaskForm):
+    form_id = HiddenField()
+    field_type = HiddenField()
+    option_ids = HiddenField()
+    text = StringField('Kysymysteksti', widget=TextInput(), validators=[
+        DataRequired(message="Kysymysteksti on pakollinen")])
+    description = TextAreaField('Selitysteksti', widget=TextArea(), validators=[
+        Length(min=0, max=200, message="Selitystekstin on oltava 0-200 merkkiä pitkä")])
+    submit = SubmitField('Tallenna kysymys', widget=SubmitInput())

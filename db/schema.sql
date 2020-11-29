@@ -33,7 +33,8 @@ CREATE TABLE Form (
 
 CREATE TABLE FieldType (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    display TEXT NOT NULL
 );
 
 CREATE TABLE Question (

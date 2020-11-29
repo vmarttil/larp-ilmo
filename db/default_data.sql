@@ -5,13 +5,13 @@ INSERT INTO FieldType (
     name
     )
     VALUES 
-        ('StringField'),
-        ('IntegerField'),
-        ('RadioField'), 
-        ('SelectField'),
-        ('SelectMultipleField'),
-        ('TextAreaField'),
-        ('CheckboxListField');
+        ('StringField', 'Tekstikenttä'),
+        ('IntegerField', 'Numerokenttä'),
+        ('RadioField', 'Valintanappi'), 
+        ('SelectField', 'Valitsin'),
+        ('SelectMultipleField', 'Monivalitsin'),
+        ('TextAreaField', 'Tekstialue'),
+        ('CheckboxListField', 'Valintaruutu');
 
 INSERT INTO Question (
     field_type, 

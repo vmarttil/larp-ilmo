@@ -28,11 +28,11 @@
           {% endfor %}
           <p>
             {% if mode == "register" %}
-              {{ form.submit() }}
+            {{ wtf.form_field(form.submit, class='form-control btn-block btn-primary') }}
             {% elif mode == "game" %}
-              <a class="btn btn-primary" href="\game\{{ game_id }}" role="button">Takaisin pelin tietoihin</a>
+              <a class="btn btn-primary" href="/game/{{ game_id }}" role="button">Takaisin pelin tietoihin</a>
             {% elif mode == "person" %}
-              <a class="btn btn-primary" href="\user\profile" role="button">Takaisin profiiliin</a>
+              <a class="btn btn-primary" href="/user/profile" role="button">Takaisin profiiliin</a>
             {% endif %}
           </p>
         </form>

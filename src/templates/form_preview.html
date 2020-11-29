@@ -1,0 +1,28 @@
+{% from "macros.html" import render_question_disabled with context %}
+
+{% extends "layout.html" %}
+{% block title %}LARP-ilmo - {{ title }}{% endblock %}
+{% block app_content %}
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1>{{ game['name'] }}</h1>
+        <h3>{{ title }}</h3>
+      </div>
+      <div class="panel-body">
+        <form id="registration_form" action='{{ action }}' method="post">
+          {{ form.hidden_tag() }}
+          {% for question in questions %}
+            {{ render_question_disabled(question) }}
+          {% endfor %}
+          <p>
+            <a class="btn btn-primary" href="/game/{{ game['id'] }}/form/edit" role="button">Takaisin</a>
+          </p>
+        </form>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>

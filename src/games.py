@@ -66,14 +66,17 @@ def get_registrations(game_id):
     sql_regs =  "SELECT \
                     ROW_NUMBER() OVER (ORDER BY r.submitted ASC) AS number, \
                     r.id, \
-                    p.first_name, \
-                    p.last_name, \
-                    p.nickname, \
+                    a.answer_text AS name, \
                     r.submitted \
                 FROM Registration AS r \
-                    JOIN Person AS p \
-                        ON r.person_id = p.id \
+                    JOIN Answer AS a \
+                        ON r.id = a.registration_id \
+                    JOIN FormQuestion AS fq \
+                        ON a.formquestion_id = fq.id \
+                    JOIN Question AS q \
+                        ON fq.question_id = q.id \
                 WHERE r.game_id = :id \
+                    AND q.prefill_tag = 'name'\
                 ORDER BY r.submitted ASC"
     result_regs = db.session.execute(sql_regs, {"id":game_id})
     registrations = result_regs.fetchall()

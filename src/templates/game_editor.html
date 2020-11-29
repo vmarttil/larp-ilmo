@@ -9,28 +9,34 @@
         <h2>{{ title }}</h1>
       </div>
       <div class="panel-body">
-        <form action='{{ action }}' method="post" novalidate> 
+        <form action='{{ action }}' method="post" novalidate>
           {{ form.hidden_tag() }}
-          {{ wtf.form_field(form.name, class='form-control') }}
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-md-12">
+              <div class="form-group">
+                {{ wtf.form_field(form.name, class='form-control') }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
               <div class="form-group">
                 {{ wtf.form_field(form.start_date, class='form-control dp') }}
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-md-6">
               <div class="form-group">
                 {{ wtf.form_field(form.end_date, class='form-control dp') }}
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-md-6">
               <div class="form-group">
                 {{ wtf.form_field(form.location, class='form-control') }}
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-md-2">
               <div class="form-group">
                 {{ wtf.form_field(form.price, class='form-control') }}
               </div>
@@ -38,19 +44,40 @@
             <span
               style="font-size: 1.5em; display: inline-block; position: relative; top: 1.3em; right: 0.5em;">€</span>
           </div>
-          {{ wtf.form_field(form.description, class='form-control', rows='12') }}
-          <p>
-            {% if has_form == True %}
-            {% if is_published == True %}
-          <p>Ilmoittautuminen on avattu.</p>
-          {% else %}
-          <p>Ilmoittautumista ei ole avattu.</p>
-          {% endif %}
-          {{ wtf.form_field(form.edit_form, class='form-control btn-block') }}
-          {% else %}
-          {{ wtf.form_field(form.create_form, class='form-control btn-block') }}
-          {% endif %}
-          {{ wtf.form_field(form.submit, class='form-control btn-primary btn-block') }}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                {{ wtf.form_field(form.description, class='form-control', rows='12') }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                {{ wtf.form_field(form.submit, class='form-control btn-primary btn-block') }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                {% if has_form == True %}
+                  {{ wtf.form_field(form.edit_form, class='form-control btn-block btn-primary') }}
+                {% else %}
+                  {{ wtf.form_field(form.create_form, class='form-control btn-block btn-primary') }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                {% if is_published == False %}
+                  {{ wtf.form_field(form.publish_form, class='form-control btn-block btn-primary') }}
+                {% else %}
+                  {{ wtf.form_field(form.unpublish_form, class='form-control btn-block btn-primary') }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>

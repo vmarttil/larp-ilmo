@@ -1,4 +1,4 @@
-{% from "macros.html" import render_question_disabled with context %}
+{% from "macros.html" import render_question_placeholder with context %}
 
 {% extends "layout.html" %}
 {% block title %}LARP-ilmo - {{ title }}{% endblock %}
@@ -8,22 +8,57 @@
   <div class="col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h2>{{ title }}</h1>
+        <h1>{{ game.name }}</h1>
+        <h3>{{ title }}</h3>
       </div>
       <div class="panel-body">
-        <form id="registration_form" action='{{ action }}' method="post">
+        <form class="form-horizontal" id="registration_form" action='{{ action }}' method="post" novalidate>
           {{ form.hidden_tag() }}
-          <p class="red">[Toistaiseksi käyttäjä voi vain julkaista oletuslomakkeen, muokkaustoiminnallisuus toteutetaan
-            projektin seuraavassa vaiheessa.]</p>
-          {% for question in questions %}
-            {{ render_question_disabled(question) }}
-          {% endfor %}
-          {% if form.published.data == False %}
-            {{ wtf.form_field(form.publish, class='form-control btn-block') }}
-          {% else %}
-            {{ wtf.form_field(form.cancel, class='form-control btn-block') }}
-          {% endif %}
+          <div class="panel-group">
+            {% for question in questions %}
+            {{ render_question_placeholder(question) }}
+            {% endfor %}
+          </div>
+
+          <div class="panel-default">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-9">
+                  <span class="glyphicon glyphicon-plus"></span>
+                  <label>Lisää uusi kysymys</label>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-4">
+                    <select class="form-control" name="field_type" id="field_type_selector">
+                      <option value="" disabled selected hidden>Valitse kysymyksen tyyppi</option>
+                      {% for type in field_types %}
+                      <option value="{{ type.id }}">{{ type.display }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    {{ wtf.form_field(form.add_question, class='form-control btn btn-primary') }}
+                </div>
+                <div class="col-md-6">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="col-md-12">
+              <div class="form-group">
+                <button class="btn btn-block btn-primary" formaction="/game/{{ game.id }}/form/preview" formmethod="GET"
+                  type="submit">Esikatsele lomaketta</a>
+              </div>
+            </div>
+          </div>
         </form>
+        <p>
+          <a class="btn btn-primary" href="/game/{{ game.id }}/edit" role="button">Takaisin pelin muokkaukseen</a>
+        </p>
         {% endblock %}
       </div>
     </div>

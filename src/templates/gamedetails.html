@@ -73,7 +73,7 @@
                 <td class="col-md-1">{{ reg['number'] }}</td>
                 <td class="col-md-6">
                   <a href="\game\{{ game['id'] }}\registration\{{ reg['id'] }}">
-                    {{ format_name(reg['first_name'], reg['last_name'], reg['nickname']) }}
+                    {{ reg['name'] }}
                   </a>
                 </td>
                 <td class="col-md-5">{{ reg['submitted']|formattimestamp }}</td>

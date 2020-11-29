@@ -58,7 +58,7 @@ def get_default_questions():
 
 def get_form_questions(form_id):
     sql =  "SELECT \
-                q.id, \
+                fq.id, \
                 ft.name AS field_type, \
                 q.question_text AS text, \
                 q.description, \
@@ -79,7 +79,7 @@ def get_form_questions(form_id):
 
 def get_question_options(question_id):
     sql =  "SELECT \
-                o.id, \
+                qo.id, \
                 o.option_text AS text \
             FROM Option as o \
                 JOIN QuestionOption AS qo \
@@ -94,7 +94,7 @@ def publish_form(form_id):
     db.session.execute(sql, {"form_id":form_id})
     db.session.commit()
 
-def cancel_form(form_id):
+def unpublish_form(form_id):
     sql = "UPDATE Form SET published = false WHERE id = :form_id;"
     db.session.execute(sql, {"form_id":form_id})
     db.session.commit()
@@ -112,6 +112,85 @@ def is_published(game_id):
     except Exception as ex:
         result = None
     return result
+
+def move_question_up(form_id, current_pos):
+    sql_1 = "UPDATE FormQuestion \
+                SET position = :current_pos - 1 \
+             WHERE position = :current_pos \
+                AND form_id = :form_id \
+             RETURNING id"
+    result = db.session.execute(sql_1, {"form_id": form_id, "current_pos": current_pos})
+    moved_id = result.fetchone()[0]
+    sql_2 = "UPDATE FormQuestion \
+                 SET position = (:current_pos) \
+             WHERE position = :current_pos - 1 \
+                AND form_id = :form_id \
+                AND id != :moved_id"
+    db.session.execute(sql_2, {"form_id": form_id, "current_pos": current_pos, "moved_id": moved_id})
+    db.session.commit()
+    return True
+
+def move_question_down(form_id, current_pos):
+    sql_1 = "UPDATE FormQuestion \
+                SET position = :current_pos + 1 \
+             WHERE position = :current_pos \
+                AND form_id = :form_id \
+             RETURNING id"
+    result = db.session.execute(sql_1, {"form_id": form_id, "current_pos": current_pos})
+    moved_id = result.fetchone()[0]
+    sql_2 = "UPDATE FormQuestion \
+                 SET position = (:current_pos) \
+             WHERE position = :current_pos + 1 \
+                AND form_id = :form_id \
+                AND id != :moved_id"
+    db.session.execute(sql_2, {"form_id": form_id, "current_pos": current_pos, "moved_id": moved_id})
+    db.session.commit()
+    return True
+
+def add_new_question(form_id, field_type, question_text, description):
+    sql_pos = "SELECT MAX(position) FROM FormQuestion WHERE form_id = :form_id"
+    result = db.session.execute(sql_pos, {"form_id": form_id})
+    position = result.fetchone()[0] + 1
+    sql_question = "INSERT INTO Question ( \
+                        field_type, \
+                        question_text, \
+                        description, \
+                        is_default, \
+                        is_optional \
+                        ) VALUES ( \
+                        :field_type, \
+                        :question_text, \
+                        :description, \
+                        false, \
+                        true \
+                        ) \
+                    RETURNING id"
+    result = db.session.execute(sql_question, {"field_type": field_type, "question_text":question_text, "description":description})
+    question_id = result.fetchone()[0]
+    sql_fq = "INSERT INTO FormQuestion (form_id, question_id, position) \
+                VALUES (:form_id, :question_id, :position)"
+    db.session.execute(sql_fq, {"form_id": form_id, "question_id":question_id, "position":position})
+    db.session.commit()
+    return True
+
+# def add_new_option(option_text):
+#     sql = "INSERT INTO Option (option_text) VALUES (:option_text) RETURNING id"
+#     result = db.session.execute(sql, {"option_text": option_text})
+#     option_id = result.fetchone()[0]
+#     db.session.commit()
+#     return option_id
+
+# def get_option_texts(id_string):
+#     print(id_string)
+#     ids = id_string.split(",")
+#     ids = tuple(map(int, ids))
+#     # param_string = get_param_string(ids)
+#     sql = "SELECT option_text FROM Option WHERE id IN :ids"
+#     # sql += param_string
+#     result = db.session.execute(sql, {"ids": ids})
+#     optiontexts = extract_from_tuples(result.fetchall())
+#     print(optiontexts)
+#     return optiontexts
 
 def save_answers(person_id, game_id, answer_list):
     sql_registration = "INSERT INTO Registration (person_id, game_id, submitted) \
@@ -178,8 +257,45 @@ def get_question_answer(registration_id, question_id, form_id):
     print(answer)
     return answer
 
+def get_field_types():
+    # Since the selector fields are not yet implemented, they are excluded for now, as are the fields with options
+    sql =  "SELECT \
+                id, \
+                display \
+            FROM FieldType \
+            WHERE name != 'SelectField' \
+                AND name != 'SelectMultipleField' \
+                AND name != 'RadioField' \
+                AND name != 'CheckBoxListField' \
+            ORDER BY display"
+    result = db.session.execute(sql)
+    field_types = to_dict_list(result.fetchall())
+    return field_types
+
+def get_field_type_name(id):
+    sql =  "SELECT \
+                display \
+            FROM FieldType \
+            WHERE id = :id"
+    result = db.session.execute(sql, {"id": id})
+    field_type_name = result.fetchone()[0]
+    return field_type_name
+
 def to_dict_list(result):
     itemlist = []
     for item in result:
         itemlist.append(dict(item))
     return itemlist
+
+def extract_from_tuples(result):
+    itemlist = []
+    for item in result:
+        itemlist.append(item[0])
+    return itemlist
+
+def get_param_string(list):
+    string = "(%s"
+    for count in range(0,len(list)-1):
+        string += ",%s"
+    string += ")"
+    return string
