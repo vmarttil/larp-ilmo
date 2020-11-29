@@ -11,34 +11,33 @@ Merkityt (&#x2713;) kohdat on jo toteutettu sovelluksen tämänhetkisessä versi
 ### Pelinjärjestäjälle
 
 - tunnuksen luonti &#x2713;
-- rekisteröityminen pelinjärjestäjäksi
 - pelin tietojen syöttäminen &#x2713;
 - ilmoittautumislomakkeen luonti &#x2713;
 - kysymysten lisääminen lomakkeeseen
 - uusien kysymysten luonti (kenttätyyppi + vastausvaihtoehdot)
 - lomakkeen julkaiseminen &#x2713;
-- täytettyjen lomakkeiden vastausten tarkastelu
+- täytettyjen lomakkeiden vastausten tarkastelu &#x2713;
 - pelin ilmoittautumisten tallennus json-tiedostona
 
 ### Käyttäjälle
 - tunnuksen luonti &#x2713;
 - palvelussa julkaistujen pelien tarkastelu &#x2713;
 - ilmoittautumislomakkeen täyttäminen &#x2713;
-- omien tietojen täyttäminen automaattisesti käyttäjäprofiilista
+- omien tietojen täyttäminen automaattisesti käyttäjäprofiilista &#x2713;
 - ilmoittautumislomakkeen lähettäminen &#x2713;
 
 ## Tarvittavat sivut / näkymät
 - sisäänkirjaus &#x2713;
 - rekisteröityminen &#x2713;
-- omien tietojen muokkaus
+- omien tietojen muokkaus &#x2713;
 - pelin luonti &#x2713;
 - pelin tietojen muokkaaminen &#x2713;
 - ilmoittautumislomakkeen luonti &#x2713;
 - uuden kysymyksen luonti
 - julkaistut pelit &#x2713;
 - ilmoittautumislomakkeen täyttö &#x2713;
-- vastausluettelo
-- yksittäisen vastauksen tarkastelu
+- ilmoittautumisluettelo &#x2713;
+- yksittäisen ilmoittautumisen tarkastelu &#x2713;
 
 ## Sovelluksen tietokantarakenne
 ![Database diagram](https://github.com/vmarttil/larp-ilmo/blob/main/images/larp-ilmo_2.png)
