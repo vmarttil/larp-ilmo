@@ -2,7 +2,8 @@
 /* Inserting default data into the database */
 
 INSERT INTO FieldType (
-    name
+    name,
+    display
     )
     VALUES 
         ('StringField', 'Tekstikenttä'),
@@ -112,7 +113,9 @@ INSERT INTO GameOrganiser (
     )
 
 INSERT INTO Form (
-    name
+    game_id,
+	name, 
+	published
     ) 
     VALUES
     (1, 'Oletuslomake', False);

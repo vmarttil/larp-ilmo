@@ -65,6 +65,14 @@ CREATE TABLE QuestionOption (
     option_id INTEGER REFERENCES Option (id)
 );
 
+
+CREATE TABLE Registration (
+    id SERIAL PRIMARY KEY,
+    submitted TIMESTAMP,
+    person_id INTEGER REFERENCES Person (id),
+    game_id INTEGER REFERENCES Game (id)
+);
+
 CREATE TABLE Answer (
     id SERIAL PRIMARY KEY,
     registration_id INTEGER REFERENCES Registration (id),
@@ -76,11 +84,4 @@ CREATE TABLE AnswerOption (
     id SERIAL PRIMARY KEY,
     answer_id INTEGER REFERENCES Answer (id),
     questionoption_id INTEGER REFERENCES QuestionOption (id)
-);
-
-CREATE TABLE Registration (
-    id SERIAL PRIMARY KEY,
-    submitted TIMESTAMP,
-    person_id INTEGER REFERENCES Person (id),
-    game_id INTEGER REFERENCES Game (id)
 );
