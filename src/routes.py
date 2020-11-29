@@ -240,7 +240,7 @@ def viewpersonregistration(registration_id):
     questions = gameforms.get_form_questions(gameform['id'])        
     for question in questions:
         question['options'] = gameforms.get_question_options(question['id'])
-        question['answer'] = gameforms.get_question_answer(registration_id, question['id'], gameform['id'])
+        question['answer'] = gameforms.get_question_answer(registration_id, question['id'])
     return render_template("registration.html", form=form, questions=questions, action="", title="Ilmoittautuminen: " + game['name'], mode="person")
 
 @app.route("/login", methods=["get","post"])
