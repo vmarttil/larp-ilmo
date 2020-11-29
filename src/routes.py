@@ -50,10 +50,10 @@ def editgame(game_id):
             return redirect("/game/" + game_id + "/form/edit")
         elif 'publish_form' in request.form:
             gameforms.publish_form(request.form['form_id'])
-            return redirect(url_for("editgame",game_id=game_id))
+            return redirect(/game/" + game_id + "/edit)
         elif 'unpublish_form' in request.form:
             gameforms.unpublish_form(request.form['form_id'])
-            return redirect(url_for("editgame",game_id=game_id))
+            return redirect(/game/" + game_id + "/edit)
     if form.validate_on_submit():
         name = request.form["name"]
         start_date = datetime.datetime.strptime(request.form["start_date"], '%d.%m.%Y')
@@ -63,10 +63,10 @@ def editgame(game_id):
         description = request.form["description"]
         if games.send(game_id, name, start_date, end_date, location, price, description):
             flash("Pelin tiedot päivitetty", "success")
-            return redirect(url_for("editgame",game_id=game_id))
+            return redirect(/game/" + game_id + "/edit)
         else:
             flash("Pelin tietojen päivitys ei onnistunut", "error")
-            return redirect(url_for("editgame",game_id=game_id))
+            return redirect(/game/" + game_id + "/edit)
 
 @app.route("/game/<game_id>")
 def game_details(game_id):
