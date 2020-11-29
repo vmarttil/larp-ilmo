@@ -3,7 +3,7 @@
 {% block scripts %}
 {{ super() }}
 {{ datepicker.loader(theme="base") }} {# to load jQuery-ui #}
-{{ datepicker.picker(id=".dp", dateFormat='dd.mm.yy', minDate='2020-01-01', maxDate='2025-12-31') }}
+{{ datepicker.picker(id=".dp", dateFormat='dd.mm.yy', minDate='1900-01-01', maxDate='2025-12-31') }}
 {% endblock %}
 {% block styles %}
 {{super()}}
@@ -37,7 +37,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if session['user_id'] %}
-            <li><a href="{{ url_for('index') }}">{{ session['user_name'] }}</a></li>
+            <li><a href="/user/profile">{{ session['user_name'] }}</a></li>
             <li><a href="{{ url_for('logout') }}">Kirjaudu ulos</a></li>
             {% else %}
             <li><a href="{{ url_for('register') }}">Rekisteröidy</a></li>
@@ -53,12 +53,22 @@
 {% block content %}
 <div class="container">
   {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-info" role="alert">{{ message }}</div>
-  {% endfor %}
-  {% endif %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == "error" %}
+          <div class="alert alert-danger alert-dismissible" role="alert">  
+        {% elif category == "success" %}
+          <div class="alert alert-success alert-dismissible" role="alert">
+        {% else %}
+          <div class="alert alert-primary alert-dismissible" role="alert">
+        {% endif %}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Sulje"><span aria-hidden="true">×</span></button>
+          {{message}}
+        </div>
+      {% endfor %}
+    {% endif %}
   {% endwith %}
+  
   {# application content needs to be provided in the app_content block #}
   {% block app_content %}
   {% endblock %}

@@ -16,6 +16,12 @@ def format_date(date, format="%-d.%-m.%Y"):
         return ""
     return date.strftime(format)
 
+@app.template_filter('formattimestamp')
+def format_timestamp(timestamp, format="%-d.%-m.%Y klo %H.%M.%S"):
+    if timestamp is None:
+        return ""
+    return timestamp.strftime(format)
+
 @app.context_processor
 def format_daterange():
     def _format_daterange(start_date, end_date):

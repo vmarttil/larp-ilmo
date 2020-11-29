@@ -1,6 +1,6 @@
 import sys
 from app import app
-from flask import render_template, request, redirect, flash, url_for
+from flask import render_template, request, redirect, flash, url_for, session
 import datetime
 import games, users, gameforms
 from forms import *
@@ -22,10 +22,10 @@ def newgame():
         location = request.form["location"]
         description = request.form["description"]
         if games.send(id, name, start_date, end_date, location, price, description):
-            flash('Pelin tiedot tallennettu')
+            flash("Pelin tiedot tallennettu", "success")
             return redirect(url_for("index"))
         else:
-            flash('Pelin lisääminen ei onnistunut', 'error')
+            flash("Pelin lisääminen ei onnistunut", "error")
             return redirect(url_for("newgame"))
     return render_template("game_editor.html", form=form, action="/game/new", title="Uuden pelin luonti", has_form=False, his_published=False)
 
@@ -56,16 +56,20 @@ def editgame(game_id):
             elif form.edit_form.data:
                 return redirect("/game/" + game_id + "/form/edit")    
             else:
-                flash('Pelin tiedot päivitetty')
+                flash("Pelin tiedot päivitetty", "success")
                 return redirect(url_for("index"))
         else:
-            flash('Pelin päivitys ei onnistunut', 'error')
+            flash("Pelin päivitys ei onnistunut", "error")
             return redirect(url_for("editgame"))
 
 @app.route("/game/<game_id>")
 def game_details(game_id):
     game = games.get_details(game_id)
-    return render_template("gamedetails.html", game=game)
+    if users.user_id() in map(lambda org: org['id'], game['organisers']):
+        registrations = games.get_registrations(game_id)
+        return render_template("gamedetails.html", game=game, organiser=True, registrations=registrations)
+    else:
+        return render_template("gamedetails.html", game=game, organiser=False)
 
 # For now, game organisers can only create a default form, view it and publish it. 
 # The form editing functionality will be added in the next phase of the project.
@@ -98,10 +102,11 @@ def gameregistration(game_id):
     form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
     form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
     if request.method == 'GET':    
-        questions = gameforms.get_form_questions(gameform['id'])        
+        questions = gameforms.get_form_questions(gameform['id'])
+        prefill_data = users.get_prefill_data(game)
         for question in questions:
             question['options'] = gameforms.get_question_options(question['id'])
-        return render_template("registration.html", game=game, form=form, questions=questions, action="/game/" + game_id + "/register" , title="Ilmoittautuminen: " + game['name'])
+        return render_template("registration.html", game=game, form=form, questions=questions, prefill_data=prefill_data, action="/game/" + game_id + "/register" , title="Ilmoittautuminen: " + game['name'], mode="register")
     if form.validate_on_submit():
         answer_list = []
         for key, value in request.form.items():
@@ -109,12 +114,62 @@ def gameregistration(game_id):
                 answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "questionoption_id": value})
             elif "integer" in key or "string" in key or "textarea" in key:
                 answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "answer_text": value})
-        if gameforms.save_answers(answer_list):
-            flash('Ilmoittautuminen tallennettu')
+        if gameforms.save_answers(users.user_id(), game_id, answer_list):
+            flash("Ilmoittautuminen tallennettu", "success")
             return redirect(url_for("index"))
         else:
-            flash('Ilmoittautuminen ei onnistunut', 'error')
+            flash("Ilmoittautuminen ei onnistunut", "error")
             return redirect("/game/" + game_id + "/register")
+
+@app.route("/game/<game_id>/registration/<registration_id>", methods=["get"])
+def viewgameregistration(game_id, registration_id):
+    game = games.get_details(game_id)
+    if users.user_id() not in map(lambda org: org['id'], game['organisers']):
+        return redirect(url_for("index"))
+    gameform = gameforms.get_game_form(game_id)
+    form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
+    form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
+    questions = gameforms.get_form_questions(gameform['id'])        
+    for question in questions:
+        question['options'] = gameforms.get_question_options(question['id'])
+        question['answer'] = gameforms.get_question_answer(registration_id, question['id'], gameform['id'])
+    return render_template("registration.html", form=form, questions=questions, action="", title="Ilmoittautuminen: " + game['name'], mode="game", game_id=game_id)
+
+@app.route("/user/profile", methods=["get", "post"])
+def editprofile():
+    profile = users.get_profile()
+    profile['birth_date'] = profile['birth_date'].strftime('%d.%m.%Y')
+    form = ProfileForm(data=profile, meta={'locales': ['fi_FI', 'fi']})
+    if form.validate_on_submit():
+        print("Does it get this far?")
+        first_name = request.form["first_name"]
+        last_name = request.form["last_name"]
+        nickname = request.form["nickname"]
+        gender = int(request.form["gender"])
+        birth_date = datetime.datetime.strptime(request.form["birth_date"], '%d.%m.%Y')
+        profile = request.form["profile"]    
+        if users.update(first_name, last_name, nickname, gender, birth_date, profile):
+            flash("Käyttäjäprofiili päivitetty", "success")
+            return redirect(url_for("editprofile"))
+        else:
+            flash("Käyttäjäprofiilin päivitys ei onnistunut", "error")
+            return redirect(url_for("editprofile"))
+    registrations = users.get_registrations()
+    return render_template("profile.html", form=form, email=profile['email'], registrations=registrations, title=session.get("user_name","") + ": Käyttäjäprofiili")
+
+@app.route("/user/profile/registration/<registration_id>", methods=["get"])
+def viewpersonregistration(registration_id):
+    user_profile = users.get_profile()
+    game_id = games.get_registration_game(registration_id)
+    game = games.get_details(game_id)
+    gameform = gameforms.get_game_form(game_id)
+    form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
+    form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
+    questions = gameforms.get_form_questions(gameform['id'])        
+    for question in questions:
+        question['options'] = gameforms.get_question_options(question['id'])
+        question['answer'] = gameforms.get_question_answer(registration_id, question['id'], gameform['id'])
+    return render_template("registration.html", form=form, questions=questions, action="", title="Ilmoittautuminen: " + game['name'], mode="person")
 
 @app.route("/login", methods=["get","post"])
 def login():
@@ -125,7 +180,7 @@ def login():
         if users.login(email,password):
             return redirect(url_for("index"))
         else:
-            flash('Väärä sähköpostiosoite tai salasana')
+            flash("Väärä sähköpostiosoite tai salasana", "error")
             return redirect(url_for("login"))
     return render_template('login.html', form=form)
 
@@ -144,12 +199,12 @@ def register():
         last_name = request.form["last_name"]
         nickname = request.form["nickname"]
         gender = int(request.form["gender"])
-        birth_year = int(request.form["birth_year"])
+        birth_date = datetime.datetime.strptime(request.form["birth_date"], '%d.%m.%Y')
         profile = request.form["profile"]    
-        if users.register(email,password, first_name, last_name, nickname, gender, birth_year, profile):
-            flash("Käyttäjätunnus luotu")
+        if users.register(email,password, first_name, last_name, nickname, gender, birth_date, profile):
+            flash("Käyttäjätunnus luotu", "success")
             return redirect(url_for("index"))
         else:
-            flash("Rekisteröinti ei onnistunut")
+            flash("Rekisteröinti ei onnistunut", "error")
             return redirect(url_for("register"))
     return render_template("register.html", form=form)

@@ -1,4 +1,6 @@
 {% from "macros.html" import render_question with context %}
+{% from "macros.html" import render_question_disabled with context %}
+{% from "macros.html" import render_question_filled with context %}
 
 {% extends "layout.html" %}
 {% block title %}LARP-ilmo - {{ title }}{% endblock %}
@@ -11,14 +13,27 @@
         <h2>{{ title }}</h1>
       </div>
       <div class="panel-body">
-        <form id="registration_form" action='{{ action }}' method="post">
+        {% if mode == "register" %}
+          <form id="registration_form" action='{{ action }}' method="post">
+        {% else %}
+          <form id="registration_form">
+        {% endif %}
           {{ form.hidden_tag() }}
-
           {% for question in questions %}
-          {{ render_question(question) }}
+            {% if mode == "register" %}
+              {{ render_question(question) }}
+            {% else %}
+              {{ render_question_filled(question) }}
+            {% endif %}
           {% endfor %}
           <p>
-            {{ form.submit() }}
+            {% if mode == "register" %}
+              {{ form.submit() }}
+            {% elif mode == "game" %}
+              <a class="btn btn-primary" href="\game\{{ game_id }}" role="button">Takaisin pelin tietoihin</a>
+            {% elif mode == "person" %}
+              <a class="btn btn-primary" href="\user\profile" role="button">Takaisin profiiliin</a>
+            {% endif %}
           </p>
         </form>
       </div>

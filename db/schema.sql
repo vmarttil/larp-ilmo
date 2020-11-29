@@ -5,7 +5,7 @@ CREATE TABLE Person (
     last_name TEXT NOT NULL,
     nickname TEXT,
     gender INTEGER NOT NULL,
-    birth_year INTEGER NOT NULL,
+    birth_date DATE NOT NULL,
     profile TEXT, 
     password TEXT NOT NULL
 );
@@ -41,7 +41,9 @@ CREATE TABLE Question (
     field_type INTEGER REFERENCES FieldType (id),
     question_text TEXT NOT NULL,
     description TEXT,
-    is_default BOOLEAN NOT NULL
+    is_default BOOLEAN NOT NULL,
+    is_optional BOOLEAN NOT NULL,
+    prefill_tag TEXT
 );
 
 CREATE TABLE FormQuestion (
@@ -64,7 +66,7 @@ CREATE TABLE QuestionOption (
 
 CREATE TABLE Answer (
     id SERIAL PRIMARY KEY,
-    person_id INTEGER REFERENCES Person (id),
+    registration_id INTEGER REFERENCES Registration (id),
     formquestion_id INTEGER REFERENCES FormQuestion (id),
     answer_text TEXT
 );
@@ -73,4 +75,11 @@ CREATE TABLE AnswerOption (
     id SERIAL PRIMARY KEY,
     answer_id INTEGER REFERENCES Answer (id),
     questionoption_id INTEGER REFERENCES QuestionOption (id)
+);
+
+CREATE TABLE Registration (
+    id SERIAL PRIMARY KEY,
+    submitted TIMESTAMP,
+    person_id INTEGER REFERENCES Person (id),
+    game_id INTEGER REFERENCES Game (id)
 );

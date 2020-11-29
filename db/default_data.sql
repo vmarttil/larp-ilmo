@@ -17,20 +17,22 @@ INSERT INTO Question (
     field_type, 
     question_text, 
     description, 
-    is_default
+    is_default,
+    is_optional,
+    prefill_tag
     )
     VALUES
-        (1,'Nimi','Ilmoittautujan koko nimi.',true),
-        (1,'Sähköposti','Sähköpostiosoite johon peliin liittyvät tiedotteet lähetetään.',true),
-        (1,'Puhelinnumero','Puhelinnumero, josta ilmoittautujan tavoittaa tarvittaessa.',true),
-        (2,'Ikä','Ilmoittautujan ikä pelin aikaan.',true),
-        (6,'Kuvaile itseäsi pelaajana','Kuvaile pelityyliäsi ja -mieltymyksiäsi, minkä tyyppisestä pelisisällöstä yleensä nautit, oletko enemmän aktiivinen vai reaktiivinen pelaaja, jne.',true),
-        (3,'Hahmon toivottu sukupuoli','Sukupuoli jota edustavaa hahmoa haluat pelata (ei välttämättä sama kuin pelaajan sukupuoli).',true),
-        (7,'Kolme sinulle tärkeintä elementtiä pelissä','Valitse kolme elementtiä, joita toivot pelisi eniten sisältävän.',true),
-        (7,'Teemat, joita et halua pelata','Valitse ne teemat, joita et halua hahmossasi käsiteltävän tai joita et halua pelisisältöösi.',true),
-        (6,'Minkä tyyppistä hahmoa haluaisit pelata tässä pelissä?','Kuvaile vapaasti, minkälaisia ominaisuuksia, luonteenpiirteitä, tms. toivoisit hahmollesi, minkälaisessa asemassa toivoisit hahmon olevan, jne.',true),
-        (6,'Minkä tyyppisiä juonikuvioita tai teemoja toivoisit peliisi?','Kuvaile minkä tyyppistä pelisisältöä haluaisit pelata ja kerro mahdollisista juoni-ideoista jollaisia haluaisit pelata.',true),
-        (6,'Muita terveisiä pelinjohdolle','Tähän voit kirjoittaa ilmoittautumistasi koskevia huomioita pelinjohdolle ja muita olennaiseksi katsomiasi seikkoja, jotka eivät sopineet muihin kenttiin.',true);
+        (1,'Nimi','Ilmoittautujan koko nimi.',true, false, 'name'),
+        (1,'Sähköposti','Sähköpostiosoite johon peliin liittyvät tiedotteet lähetetään.',true, false, 'email'),
+        (1,'Puhelinnumero','Puhelinnumero, josta ilmoittautujan tavoittaa tarvittaessa.',true, true, null),
+        (2,'Ikä','Ilmoittautujan ikä pelin aikaan.',true, true, 'age'),
+        (6,'Kuvaile itseäsi pelaajana','Kuvaile pelityyliäsi ja -mieltymyksiäsi, minkä tyyppisestä pelisisällöstä yleensä nautit, oletko enemmän aktiivinen vai reaktiivinen pelaaja, jne.',true, true, 'profile'),
+        (3,'Hahmon toivottu sukupuoli','Sukupuoli jota edustavaa hahmoa haluat pelata (ei välttämättä sama kuin pelaajan sukupuoli).',true, true, null),
+        (7,'Kolme sinulle tärkeintä elementtiä pelissä','Valitse kolme elementtiä, joita toivot pelisi eniten sisältävän.',true, true, null),
+        (7,'Teemat, joita et halua pelata','Valitse ne teemat, joita et halua hahmossasi käsiteltävän tai joita et halua pelisisältöösi.',true, true, null),
+        (6,'Minkä tyyppistä hahmoa haluaisit pelata tässä pelissä?','Kuvaile vapaasti, minkälaisia ominaisuuksia, luonteenpiirteitä, tms. toivoisit hahmollesi, minkälaisessa asemassa toivoisit hahmon olevan, jne.',true, true, null),
+        (6,'Minkä tyyppisiä juonikuvioita tai teemoja toivoisit peliisi?','Kuvaile minkä tyyppistä pelisisältöä haluaisit pelata ja kerro mahdollisista juoni-ideoista jollaisia haluaisit pelata.',true, true, null),
+        (6,'Muita terveisiä pelinjohdolle','Tähän voit kirjoittaa ilmoittautumistasi koskevia huomioita pelinjohdolle ja muita olennaiseksi katsomiasi seikkoja, jotka eivät sopineet muihin kenttiin.',true, true, null);
 
 INSERT INTO Option (
     option_text

@@ -42,9 +42,12 @@ def get_form_by_id(form_id):
 def get_default_questions():
     sql =  "SELECT \
                 q.id, \
-                ft.name, \
+                ft.name AS field_type, \
                 q.question_text AS text, \
-                q.description \
+                q.description, \
+                q.is_default, \
+                q.is_optional, \
+                q.prefill_tag \
             FROM Question AS q \
                 JOIN FieldType AS ft \
                     ON q.field_type = ft.id \
@@ -59,7 +62,10 @@ def get_form_questions(form_id):
                 ft.name AS field_type, \
                 q.question_text AS text, \
                 q.description, \
-                fq.position \
+                fq.position, \
+                q.is_default, \
+                q.is_optional, \
+                q.prefill_tag \
             FROM Question AS q \
                 JOIN FieldType AS ft \
                     ON q.field_type = ft.id \
@@ -107,21 +113,26 @@ def is_published(game_id):
         result = None
     return result
 
-def save_answers(answer_list):
+def save_answers(person_id, game_id, answer_list):
+    sql_registration = "INSERT INTO Registration (person_id, game_id, submitted) \
+                            VALUES (:person_id, :game_id, NOW()) \
+                        RETURNING id;"
+    result = db.session.execute(sql_registration, {"person_id": person_id, "game_id":game_id})
+    registration_id = result.fetchone()[0]
     sql_text = "INSERT INTO Answer ( \
-                    person_id, \
+                    registration_id, \
                     formquestion_id, \
                     answer_text \
                     ) VALUES ( \
-                        :person_id, \
+                        :registration_id, \
                         :formquestion_id, \
                         :answer_text \
                         );"
     sql_answer = "INSERT INTO Answer ( \
-                    person_id, \
+                    registration_id, \
                     formquestion_id \
                     ) VALUES ( \
-                        :person_id, \
+                        :registration_id, \
                         :formquestion_id \
                         ) RETURNING id;"
     sql_option = "INSERT INTO AnswerOption ( \
@@ -130,15 +141,42 @@ def save_answers(answer_list):
                     ) VALUES ( \
                         :answer_id, \
                         :questionoption_id \
-                        );"        
+                        );"
+    last_question = 0
+    answer_id = 0
     for answer in answer_list:
         if "answer_text" in answer:
-            db.session.execute(sql_text, {"person_id":answer['person_id'], "formquestion_id":answer['formquestion_id'], "answer_text":answer['answer_text']})
+            db.session.execute(sql_text, {"registration_id":registration_id, "formquestion_id":answer['formquestion_id'], "answer_text":answer['answer_text']})
         else:
-            answer_id = db.session.execute(sql_answer, {"person_id":answer['person_id'], "formquestion_id":answer['formquestion_id']}).fetchone()[0]
+            if last_question != answer['formquestion_id']:
+                answer_id = db.session.execute(sql_answer, {"registration_id":registration_id, "formquestion_id":answer['formquestion_id']}).fetchone()[0]
+                last_question = answer['formquestion_id']
             db.session.execute(sql_option, {"answer_id":answer_id, "questionoption_id":answer['questionoption_id']})
     db.session.commit()
     return True
+
+def get_question_answer(registration_id, question_id, form_id):
+    sql =  "SELECT \
+                a.answer_text AS text, \
+                ARRAY( \
+                    SELECT questionoption_id \
+                    FROM AnswerOption AS ao \
+                    WHERE ao.answer_id = a.id \
+                    ) AS options \
+            FROM Answer as a \
+                JOIN FormQuestion AS fq \
+                    ON a.formquestion_id = fq.id \
+            WHERE a.registration_id = :registration_id \
+                AND fq.form_id = :form_id \
+                AND fq.question_id = :question_id;"
+    result = db.session.execute(sql, {"registration_id": registration_id, "question_id": question_id, "form_id": form_id})
+    result = result.fetchone()
+    if result[0] == None:
+        answer = list(result[1])
+    else:
+        answer = result[0]
+    print(answer)
+    return answer
 
 def to_dict_list(result):
     itemlist = []

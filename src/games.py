@@ -11,16 +11,14 @@ def get_list():
                 g.price, \
                 go.person_id AS organiser_id, \
                 f.published, \
-                COUNT(DISTINCT a.person_id) AS num_registrations \
+                COUNT(r.person_id) AS num_registrations \
             FROM Game AS g \
                 JOIN GameOrganiser AS go \
                     ON g.id = go.game_id \
                 LEFT JOIN Form AS f \
                     ON g.id = f.game_id \
-                LEFT JOIN FormQuestion as fq \
-                    ON f.id = fq.form_id \
-                LEFT JOIN Answer as a \
-                    ON fq.id = a.formquestion_id \
+                LEFT JOIN Registration as r \
+                    ON g.id = r.game_id \
             GROUP BY g.id, g.name, g.start_date, g.end_date, g.location, g.price, go.person_id, f.published \
             ORDER BY start_date"
     result = db.session.execute(sql)
@@ -43,6 +41,12 @@ def get_details(id):
                     WHERE g.id = :id"
     result_game = db.session.execute(sql_game, {"id":id})
     game = result_game.fetchone()
+    organisers = get_organisers(id)
+    game = dict(game.items())
+    game['organisers'] = organisers
+    return game
+
+def get_organisers(game_id):
     sql_orgs =  "SELECT \
                     p.id, \
                     p.first_name, \
@@ -54,11 +58,35 @@ def get_details(id):
                         ON p.id = go.person_id \
                 WHERE go.game_id = :id \
                 ORDER BY p.last_name"
-    result_orgs = db.session.execute(sql_orgs, {"id":id})
+    result_orgs = db.session.execute(sql_orgs, {"id":game_id})
     organisers = result_orgs.fetchall()
-    game = dict(game.items())
-    game['organisers'] = organisers
-    return game
+    return organisers
+
+def get_registrations(game_id):
+    sql_regs =  "SELECT \
+                    ROW_NUMBER() OVER (ORDER BY r.submitted ASC) AS number, \
+                    r.id, \
+                    p.first_name, \
+                    p.last_name, \
+                    p.nickname, \
+                    r.submitted \
+                FROM Registration AS r \
+                    JOIN Person AS p \
+                        ON r.person_id = p.id \
+                WHERE r.game_id = :id \
+                ORDER BY r.submitted ASC"
+    result_regs = db.session.execute(sql_regs, {"id":game_id})
+    registrations = result_regs.fetchall()
+    return registrations
+
+def get_registration_game(registration_id):
+    sql =  "SELECT \
+                game_id \
+            FROM Registration \
+            WHERE id = :registration_id"
+    result = db.session.execute(sql, {"registration_id": registration_id})
+    game_id = result.fetchone()[0]
+    return game_id
 
 def send(id, name, start_date, end_date, location, price, description):
     person_id = users.user_id()
@@ -92,7 +120,7 @@ def send(id, name, start_date, end_date, location, price, description):
                 VALUES ( \
                     :person_id, \
                     :game_id \
-                )"
+                );"
         db.session.execute(sql, {"person_id":person_id, "game_id":game_id})
     else: 
         sql =  "UPDATE Game SET \

@@ -9,7 +9,7 @@
         <h2>
           {{ game['name'] }}
           {% if game['published'] == True and 'user_id' in session %}
-            &nbsp;<a class="btn btn-primary btn-xs" href="\game\{{ game['id'] }}\register" role="button">Ilmoittaudu</a>
+          &nbsp;<a class="btn btn-primary btn-xs" href="\game\{{ game['id'] }}\register" role="button">Ilmoittaudu</a>
           {% endif %}
         </h2>
       </div>
@@ -57,8 +57,35 @@
             <p>{{ game['description'] }}</p>
           </div>
         </div>
-        {% endblock %}
-      </div>
+        {% if organiser == True %}
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+            <h4>Ilmoittautumiset</h4>
+            <table class="table-condensed">
+              <tr>
+                <th class="col-md-1">Nro</th>
+                <th class="col-md-6">Pelaajan nimi</th>
+                <th class="col-md-5">Lähetetty</th>
+              </tr>
+              {% for reg in registrations %}
+              <tr>
+                <td class="col-md-1">{{ reg['number'] }}</td>
+                <td class="col-md-6">
+                  <a href="\game\{{ game['id'] }}\registration\{{ reg['id'] }}">
+                    {{ format_name(reg['first_name'], reg['last_name'], reg['nickname']) }}
+                  </a>
+                </td>
+                <td class="col-md-5">{{ reg['submitted']|formattimestamp }}</td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+          <div class="col-md-2"></div>
+        </div>
+      {% endif %}
+      {% endblock %}
     </div>
   </div>
+</div>
 </div>
