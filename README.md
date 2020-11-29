@@ -60,20 +60,20 @@ Sivun yläreunassa näkyy sisäänkirjautuneille käyttäjille linkki "Ilmoita p
 sovellukseen uusi peli tietoineen ja luoda sille ilmoittautumislomake. Uuden pelin luonti -sivulla "Tallenna peli" 
 tallentaa pelin tiedot, mutta ei vielä luo sille ilmoittautumislomaketta. Pelin luonut käyttäjä pääsee myöhemmin 
 muokkaamaan pelin tietoja pääsivun peliluettelossa näkyvän "Muokkaa"-linkin kautta, ja tätä kautta voi myös luoda 
-pelille ilmoittautumislomakkeen. 
+pelille ilmoittautumislomakkeen. Pelin muokkausnäkymän alareunassa on "Avaa ilmoittautuminen" -painike, joka 
+julkaisee ilmoittautumislomakkeen siten, että kaikki sisään kirjautuneet käyttäjät pystyvät ilmoittautumaan 
+peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta. Kun ilmoittautuminen on avattu, "Avaa ilmoittautuminen" 
+-painike korvautuu "Sulje ilmoittautuminen" -painikkeella, joka poistaa ilmoittautumislinkin pääsivun listasta ja 
+estää uusien ilmoittautumisten tekemisen.
 
 ### Ilmoittautumislomakkeen luonti
 
 Pelin luonti- ja muokkausivun painike "Luo ilmoittautumislomake" luo pelille ilmoittautumislomakkeen ja avaa sen
 näkyviin. Aluksi lomakkeessa on oletuskysymykset, ja tällä hetkellä käyttäjä voi vaihdella niiden järjestystä ja 
-lisätä lomakkeeseen uusia tekstikenttä, numerokenttä ja tekstialue-tyyppisiä kysymyksiä. Kysymysten muokkaamista 
+lisätä lomakkeeseen uusia tekstikenttä-, numerokenttä- ja tekstialue-tyyppisiä kysymyksiä. Kysymysten muokkaamista 
 ja poistamista eikä valintoja sisältävien kysymysten ja niiden valintojen lisäämistä ei ole vielä toteutettu; 
 lopullisessa versiossa käyttäjä voi poistaa kysymyksiä, muokata niitä ja luoda myös valintatyyppisiä kysymyksiä. 
-Ilmoittautumislomakkeen muokkausnäkymän alareunassa on "Avaa ilmoittautuminen" -painike, joka julkaisee 
-ilmoittautumislomakkeen siten, että kaikki sisään kirjautuneet käyttäjät pystyvät ilmoittautumaan 
-peliin pääsivun listassa näkyvän "Ilmoittaudu"-linkin kautta. Kun ilmoittautuminen on avattu, "Avaa ilmoittautuminen" 
--painike korvautuu "Sulje ilmoittautuminen" -painikkeella, joka poistaa ilmoittautumislinkin pääsivun listasta ja 
-estää uusien ilmoittautumisten tekemisen. Muokkausnäkymän alareunassa on myös painike, jolla lomaketta voi esikatsella 
+ Muokkausnäkymän alareunassa on myös painike, jolla lomaketta voi esikatsella 
 siinä muodossa kun se tulee näkymään käyttäjälle, mutta ilman täyttömahdollisuuta.
 
 ### Ilmoittautuminen
