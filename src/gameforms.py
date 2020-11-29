@@ -238,7 +238,7 @@ def save_answers(person_id, game_id, answer_list):
     db.session.commit()
     return True
 
-def get_question_answer(registration_id, question_id, form_id):
+def get_question_answer(registration_id, formquestion_id):
     sql =  "SELECT \
                 a.answer_text AS text, \
                 ARRAY( \
@@ -250,9 +250,8 @@ def get_question_answer(registration_id, question_id, form_id):
                 JOIN FormQuestion AS fq \
                     ON a.formquestion_id = fq.id \
             WHERE a.registration_id = :registration_id \
-                AND fq.form_id = :form_id \
-                AND fq.question_id = :question_id;"
-    result = db.session.execute(sql, {"registration_id": registration_id, "question_id": question_id, "form_id": form_id})
+                AND fq.id = :formquestion_id;"
+    result = db.session.execute(sql, {"registration_id": registration_id, "formquestion_id": formquestion_id})
     result = result.fetchone()
     if result[0] == None:
         answer = list(result[1])
