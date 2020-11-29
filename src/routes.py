@@ -49,10 +49,10 @@ def editgame(game_id):
         elif 'edit_form' in request.form:
             return redirect("/game/" + game_id + "/form/edit")
         elif 'publish_form' in request.form:
-            gameforms.publish_form(request.form['form_id'])
+            gameforms.publish_form(gameforms.get_game_form(game_id)["id"])
             return redirect("/game/" + game_id + "/edit")
         elif 'unpublish_form' in request.form:
-            gameforms.unpublish_form(request.form['form_id'])
+            gameforms.unpublish_form(gameforms.get_game_form(game_id)["id"])
             return redirect("/game/" + game_id + "/edit")
     if form.validate_on_submit():
         name = request.form["name"]
