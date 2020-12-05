@@ -1,0 +1,4 @@
+db/test_user.sql
+src/.env
+__pycache__
+venv

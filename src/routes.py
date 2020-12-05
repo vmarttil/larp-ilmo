@@ -184,7 +184,7 @@ def gameregistration(game_id):
         answer_list = []
         for key, value in request.form.items():
             if "checkbox" in key or "radio" in key:
-                answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "questionoption_id": value})
+                answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "option_id": value})
             elif "integer" in key or "string" in key or "textarea" in key:
                 answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "answer_text": value})
         if gameforms.save_answers(users.user_id(), game_id, answer_list):
@@ -217,10 +217,10 @@ def editprofile():
         first_name = request.form["first_name"]
         last_name = request.form["last_name"]
         nickname = request.form["nickname"]
-        gender = int(request.form["gender"])
+        phone = request.form["phone"]
         birth_date = datetime.datetime.strptime(request.form["birth_date"], '%d.%m.%Y')
         profile = request.form["profile"]    
-        if users.update(first_name, last_name, nickname, gender, birth_date, profile):
+        if users.update(first_name, last_name, nickname, phone, birth_date, profile):
             flash("Käyttäjäprofiili päivitetty", "success")
             return redirect(url_for("editprofile"))
         else:
@@ -270,10 +270,10 @@ def register():
         first_name = request.form["first_name"]
         last_name = request.form["last_name"]
         nickname = request.form["nickname"]
-        gender = int(request.form["gender"])
+        phone = request.form["phone"]
         birth_date = datetime.datetime.strptime(request.form["birth_date"], '%d.%m.%Y')
         profile = request.form["profile"]    
-        if users.register(email,password, first_name, last_name, nickname, gender, birth_date, profile):
+        if users.register(email,password, first_name, last_name, nickname, phone, birth_date, profile):
             flash("Käyttäjätunnus luotu", "success")
             return redirect(url_for("index"))
         else:

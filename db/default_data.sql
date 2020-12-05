@@ -36,57 +36,31 @@ INSERT INTO Question (
         (6,'Muita terveisiä pelinjohdolle','Tähän voit kirjoittaa ilmoittautumistasi koskevia huomioita pelinjohdolle ja muita olennaiseksi katsomiasi seikkoja, jotka eivät sopineet muihin kenttiin.',true, true, null);
 
 INSERT INTO Option (
+    question_id,
     option_text
     )
     VALUES
-        ('Mies'),
-        ('Nainen'),
-        ('Muu'),
-        ('Ei väliä'),
-        ('Seikkailu'),
-        ('Romantiikka'),
-        ('Parisuhde'),
-        ('Ystävyys'),
-        ('Juonittelu'),
-        ('Toiminta'),
-        ('Politiikka'),
-        ('Vastoinkäymiset'),
-        ('Yllätykset'),
-        ('Läheisen kuolema'),
-        ('Fyysinen väkivalta'),
-        ('Seksuaalisuus'),
-        ('Alistaminen'),
-        ('Yksinäisyys'),
-        ('Henkinen väkivalta'),
-        ('Mielenterveysongelmat'),
-        ('Fyysiset vammat');
-
-INSERT INTO QuestionOption (
-    question_id,
-    option_id
-    )
-    VALUES
-        (6,1),
-        (6,2),
-        (6,3),
-        (6,4),
-        (7,5),
-        (7,6),
-        (7,7),
-        (7,8),
-        (7,9),
-        (7,10),
-        (7,11),
-        (7,12),
-        (7,13),
-        (8,14),
-        (8,15),
-        (8,16),
-        (8,17),
-        (8,18),
-        (8,19),
-        (8,20),
-        (8,21);
+        (6,'Mies'),
+        (6,'Nainen'),
+        (6,'Muu'),
+        (6,'Ei väliä'),
+        (7,'Seikkailu'),
+        (7,'Romantiikka'),
+        (7,'Parisuhde'),
+        (7,'Ystävyys'),
+        (7,'Juonittelu'),
+        (7,'Toiminta'),
+        (7,'Politiikka'),
+        (7,'Vastoinkäymiset'),
+        (7,'Yllätykset'),
+        (8,'Läheisen kuolema'),
+        (8,'Fyysinen väkivalta'),
+        (8,'Seksuaalisuus'),
+        (8,'Alistaminen'),
+        (8,'Yksinäisyys'),
+        (8,'Henkinen väkivalta'),
+        (8,'Mielenterveysongelmat'),
+        (8,'Fyysiset vammat');
 
 INSERT INTO Game (
     name, 
@@ -102,7 +76,7 @@ INSERT INTO Game (
         'Helsinki',
         35,
         'Tässä on lyhyt kuvaus pelistä.'
-        )
+        );
 
 INSERT INTO GameOrganiser (
     person_id,
@@ -110,7 +84,7 @@ INSERT INTO GameOrganiser (
     ) VALUES (
         1,
         1
-    )
+    );
 
 INSERT INTO Form (
     game_id,

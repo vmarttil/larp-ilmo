@@ -4,7 +4,7 @@ CREATE TABLE Person (
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     nickname TEXT,
-    gender INTEGER NOT NULL,
+    phone TEXT UNIQUE,
     birth_date DATE NOT NULL,
     profile TEXT, 
     password TEXT NOT NULL
@@ -56,15 +56,9 @@ CREATE TABLE FormQuestion (
 
 CREATE TABLE Option (
     id SERIAL PRIMARY KEY,
+    question_id INTEGER REFERENCES Question (id),
     option_text TEXT NOT NULL
 );
-
-CREATE TABLE QuestionOption (
-    id SERIAL PRIMARY KEY,
-    question_id INTEGER REFERENCES Question (id),
-    option_id INTEGER REFERENCES Option (id)
-);
-
 
 CREATE TABLE Registration (
     id SERIAL PRIMARY KEY,
@@ -83,5 +77,5 @@ CREATE TABLE Answer (
 CREATE TABLE AnswerOption (
     id SERIAL PRIMARY KEY,
     answer_id INTEGER REFERENCES Answer (id),
-    questionoption_id INTEGER REFERENCES QuestionOption (id)
+    option_id INTEGER REFERENCES Option (id)
 );

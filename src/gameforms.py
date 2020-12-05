@@ -79,13 +79,11 @@ def get_form_questions(form_id):
 
 def get_question_options(formquestion_id):
     sql =  "SELECT \
-                qo.id, \
+                o.id, \
                 o.option_text AS text \
             FROM Option as o \
-                JOIN QuestionOption AS qo \
-                    ON o.id = qo.option_id \
                 JOIN Question AS q \
-                    ON qo.question_id = q.id \
+                    ON o.question_id = q.id \
                 JOIN FormQuestion AS fq \
                     ON q.id = fq.question_id \
             WHERE fq.id = :formquestion_id;"
@@ -220,10 +218,10 @@ def save_answers(person_id, game_id, answer_list):
                         ) RETURNING id;"
     sql_option = "INSERT INTO AnswerOption ( \
                     answer_id, \
-                    questionoption_id \
+                    option_id \
                     ) VALUES ( \
                         :answer_id, \
-                        :questionoption_id \
+                        :option_id \
                         );"
     last_question = 0
     answer_id = 0
@@ -234,7 +232,7 @@ def save_answers(person_id, game_id, answer_list):
             if last_question != answer['formquestion_id']:
                 answer_id = db.session.execute(sql_answer, {"registration_id":registration_id, "formquestion_id":answer['formquestion_id']}).fetchone()[0]
                 last_question = answer['formquestion_id']
-            db.session.execute(sql_option, {"answer_id":answer_id, "questionoption_id":answer['questionoption_id']})
+            db.session.execute(sql_option, {"answer_id":answer_id, "option_id":answer['option_id']})
     db.session.commit()
     return True
 
@@ -242,7 +240,7 @@ def get_question_answer(registration_id, formquestion_id):
     sql =  "SELECT \
                 a.answer_text AS text, \
                 ARRAY( \
-                    SELECT questionoption_id \
+                    SELECT option_id \
                     FROM AnswerOption AS ao \
                     WHERE ao.answer_id = a.id \
                     ) AS options \

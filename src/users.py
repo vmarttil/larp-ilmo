@@ -31,7 +31,7 @@ def logout():
     del session['user_id']
     del session['user_name']
 
-def register(email,password, first_name, last_name, nickname, gender, birth_date, profile):
+def register(email,password, first_name, last_name, nickname, phone, birth_date, profile):
     hash_value = generate_password_hash(password)
     try:
         sql =  "INSERT INTO Person (\
@@ -40,7 +40,7 @@ def register(email,password, first_name, last_name, nickname, gender, birth_date
                     first_name, \
                     last_name, \
                     nickname, \
-                    gender, \
+                    phone, \
                     birth_date, \
                     profile\
                     ) VALUES ( \
@@ -49,28 +49,28 @@ def register(email,password, first_name, last_name, nickname, gender, birth_date
                         :first_name, \
                         :last_name, \
                         :nickname, \
-                        :gender, \
+                        :phone, \
                         :birth_date, \
                         :profile \
                     )"
-        db.session.execute(sql, {"email":email, "password":hash_value, "first_name":first_name, "last_name":last_name, "nickname":nickname, "gender":gender, "birth_date":birth_date, "profile":profile})
+        db.session.execute(sql, {"email":email, "password":hash_value, "first_name":first_name, "last_name":last_name, "nickname":nickname, "phone":phone, "birth_date":birth_date, "profile":profile})
         db.session.commit()
     except:
         return False
     return login(email,password)
 
-def update(first_name, last_name, nickname, gender, birth_date, profile):
+def update(first_name, last_name, nickname, phone, birth_date, profile):
     try:
         sql =  "UPDATE Person \
                     SET \
                         first_name = :first_name, \
                         last_name = :last_name, \
                         nickname = :nickname, \
-                        gender = :gender, \
+                        phone = :phone, \
                         birth_date = :birth_date, \
                         profile = profile \
                     WHERE id = :id"
-        db.session.execute(sql, {"id":user_id(), "first_name":first_name, "last_name":last_name, "nickname":nickname, "gender":gender, "birth_date":birth_date, "profile":profile})
+        db.session.execute(sql, {"id":user_id(), "first_name":first_name, "last_name":last_name, "nickname":nickname, "phone":phone, "birth_date":birth_date, "profile":profile})
         db.session.commit()
     except:
         return False
@@ -90,7 +90,7 @@ def get_profile():
                 first_name, \
                 last_name, \
                 nickname, \
-                gender, \
+                phone, \
                 birth_date, \
                 profile \
             FROM Person \
@@ -121,13 +121,14 @@ def get_prefill_data(game):
                 first_name, \
                 last_name, \
                 nickname, \
+                phone, \
                 birth_date, \
                 profile \
             FROM Person \
             WHERE id = :user_id;"
     result = db.session.execute(sql, {"user_id": user_id})
     profile = result.fetchone()
-    prefill_data = {"name": format_name(profile[1], profile[2], profile[3]), "email": profile[0], "age": calculate_age(profile[4], game["start_date"]), "profile": profile[5]}
+    prefill_data = {"name": format_name(profile[1], profile[2], profile[3]), "email": profile[0], "phone": profile[4], "age": calculate_age(profile[5], game["start_date"]), "profile": profile[6]}
     return prefill_data
 
 def format_name(first_name, last_name, nickname):

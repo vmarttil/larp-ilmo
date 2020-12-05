@@ -16,12 +16,9 @@ class RegisterForm(FlaskForm):
         DataRequired(message="Etunimi on pakollinen")])
     last_name = StringField('Sukunimi', widget=TextInput(), validators=[
         DataRequired(message="Sukunimi on pakollinen")])
-    nickname = StringField('Lempinimi', widget=TextInput())        
-    gender = RadioField('Sukupuoli', widget=ListWidget(), choices=[
-        ('0', 'En halua kertoa'),
-        ('1', 'Mies'),
-        ('3', 'Nainen'),
-        ('9', 'Muu')])
+    nickname = StringField('Lempinimi', widget=TextInput())
+    phone = StringField('Puhelinnumero', widget=TextInput(), validators=[
+        Regexp('^\+\d+$', message='Anna kelvollinen puhelinnumero muodossa +xxxxxxxxxxxxx')])
     birth_date = StringField('Syntymäaika', widget=TextInput(), validators=[
         Regexp('^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$', message='Anna kelvollinen päivämäärä')])
     profile = TextAreaField('Pelaajaprofiilikuvaus', widget=TextArea(), validators=[
@@ -41,11 +38,8 @@ class ProfileForm(FlaskForm):
     last_name = StringField('Sukunimi', widget=TextInput(), validators=[
         DataRequired(message="Sukunimi on pakollinen")])
     nickname = StringField('Lempinimi', widget=TextInput())        
-    gender = RadioField('Sukupuoli', widget=ListWidget(), choices=[
-        ('0', 'En halua kertoa'),
-        ('1', 'Mies'),
-        ('3', 'Nainen'),
-        ('9', 'Muu')])
+    phone = StringField('Puhelinnumero', widget=TextInput(), validators=[
+        Regexp('^\+\d+$', message='Anna kelvollinen puhelinnumero muodossa +xxxxxxxxxxxxx')])
     birth_date = StringField('Syntymäaika', widget=TextInput(), validators=[
         Regexp('^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$', message='Anna kelvollinen päivämäärä')])
     profile = TextAreaField('Pelaajaprofiilikuvaus', widget=TextArea(), validators=[
