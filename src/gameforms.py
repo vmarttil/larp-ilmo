@@ -149,7 +149,7 @@ def move_question_down(form_id, current_pos):
     db.session.commit()
     return True
 
-def add_new_question(form_id, field_type, question_text, description):
+def add_new_question(form_id, field_type, question_text, description, options):
     sql_pos = "SELECT MAX(position) FROM FormQuestion WHERE form_id = :form_id"
     result = db.session.execute(sql_pos, {"form_id": form_id})
     position = result.fetchone()[0] + 1
@@ -172,28 +172,22 @@ def add_new_question(form_id, field_type, question_text, description):
     sql_fq = "INSERT INTO FormQuestion (form_id, question_id, position) \
                 VALUES (:form_id, :question_id, :position)"
     db.session.execute(sql_fq, {"form_id": form_id, "question_id":question_id, "position":position})
+    add_new_options(question_id, options)
     db.session.commit()
     return True
 
-# def add_new_option(option_text):
-#     sql = "INSERT INTO Option (option_text) VALUES (:option_text) RETURNING id"
-#     result = db.session.execute(sql, {"option_text": option_text})
-#     option_id = result.fetchone()[0]
-#     db.session.commit()
-#     return option_id
-
-# def get_option_texts(id_string):
-#     print(id_string)
-#     ids = id_string.split(",")
-#     ids = tuple(map(int, ids))
-#     # param_string = get_param_string(ids)
-#     sql = "SELECT option_text FROM Option WHERE id IN :ids"
-#     # sql += param_string
-#     result = db.session.execute(sql, {"ids": ids})
-#     optiontexts = extract_from_tuples(result.fetchall())
-#     print(optiontexts)
-#     return optiontexts
-
+def add_new_options(question_id, options):
+    sql_option =   "INSERT INTO Option ( \
+                        question_id, \
+                        option_text \
+                        ) VALUES ( \
+                        :question_id, \
+                        :option_text \
+                        )"
+    for option in options:
+        db.session.execute(sql_option, {"question_id": question_id, "option_text":option})
+    return True    
+    
 def save_answers(person_id, game_id, answer_list):
     sql_registration = "INSERT INTO Registration (person_id, game_id, submitted) \
                             VALUES (:person_id, :game_id, NOW()) \
@@ -259,15 +253,13 @@ def get_question_answer(registration_id, formquestion_id):
     return answer
 
 def get_field_types():
-    # Since the selector fields are not yet implemented, they are excluded for now, as are the fields with options
+    # Since the selector fields are not yet implemented, they are excluded for now
     sql =  "SELECT \
                 id, \
                 display \
             FROM FieldType \
             WHERE name != 'SelectField' \
                 AND name != 'SelectMultipleField' \
-                AND name != 'RadioField' \
-                AND name != 'CheckBoxListField' \
             ORDER BY display"
     result = db.session.execute(sql)
     field_types = to_dict_list(result.fetchall())
@@ -286,12 +278,6 @@ def to_dict_list(result):
     itemlist = []
     for item in result:
         itemlist.append(dict(item))
-    return itemlist
-
-def extract_from_tuples(result):
-    itemlist = []
-    for item in result:
-        itemlist.append(item[0])
     return itemlist
 
 def get_param_string(list):

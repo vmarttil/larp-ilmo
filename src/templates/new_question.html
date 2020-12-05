@@ -13,33 +13,37 @@
           {{ form.hidden_tag() }}
           {{ wtf.form_field(form.text, class='form-control') }}
           {{ wtf.form_field(form.description, class='form-control', rows="4") }}
-          {% if field_type in ["3","4","5","7",] %}
-            <div class="row">
-              <div class="col-md-2">
-                <label>Valinnat:</label>
-              </div>
-              <div class="col-md-4">
-                <ul>
-                  {% for option in options %}
-                    <li>{{ option }}</li>
-                  {% endfor %}
-                </ul>
-              </div>
-              <div class="col-md-6"></div>
+          {% if form.field_type.data in ["3","4","5","7"] %}
+          <div class="row">
+            <div class="col-md-1">
+              <label>Valinnat:</label>
             </div>
-            <div class="row">
-              <div class="col-md-2"></div>
-              <div class="col-md-4">
-                <input class="form-control" id="new_option" name="option_text" type="text" value>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-primary" name="add_option" type="submit" formaction="/game/{{ game.id }}/form/edit/new_option"
-            formmethod="POST" value="add_option">Lisää valinta</button>
-              </div>
-              <div class="col-md-3"></div>
+            <div class="col-md-7">
+              <ul class="list-unstyled" style="margin-bottom: 0px; padding-left: 1em;">
+                {% for option in options %}
+                <li>
+                  {{ option }}
+                  <input type="hidden" id="option_{{ loop.index }}_hidden" name="option_text_{{ loop.index }}"
+                    value="{{ option }}">
+                </li>
+                {% endfor %}
+                <li>
+                  <div class="input-group">
+                    <input class="form-control" style="height: 1.6em;" id="new_option"
+                      name="new_option_text" type="text" value>
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary btn-xs" name="add_option" type="submit"
+                        formaction="/game/{{ game.id }}/form/edit/new_option" formmethod="POST" value="add_option">Lisää
+                        valinta</button>
+                    </span>
+                  </div>
+                </li>
+              </ul>
             </div>
+            <div class="col-md-4"></div>
+          </div>
           {% endif %}
-          <br/>
+          <br />
           {{ wtf.form_field(form.submit, class='btn btn-primary btn-block') }}
         </form>
       </div>

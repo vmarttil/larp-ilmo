@@ -398,20 +398,20 @@
       <div class="col-md-3">
         <div class="pull-right">
           {% if question['is_optional'] == True %}
-          <button class="btn btn-xs" name="edit" type="submit" formaction="/game/{{ game.id }}/form/edit/edit"
+          <button class="btn btn-xs" name="edit" title="Muokkaa" type="submit" formaction="/game/{{ game.id }}/form/edit/edit"
             formmethod="POST" value="{{ question.id }}">
             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
           </button>
-          <button class="btn btn-xs" name="delete" type="submit" formaction="/game/{{ game.id }}/form/edit/delete"
+          <button class="btn btn-xs" name="delete" title="Poista" type="submit" formaction="/game/{{ game.id }}/form/edit/delete"
             formmethod="POST" value="{{ question.id }}">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
           </button>
           {% endif %}
-          <button class="btn btn-xs" name="move_up" type="submit" formaction="/game/{{ game.id }}/form/edit/move_up"
+          <button class="btn btn-xs" name="move_up" title="Siirrä ylöspäin" type="submit" formaction="/game/{{ game.id }}/form/edit/move_up"
             formmethod="POST" value="{{ question.position }}">
             <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
           </button>
-          <button class="btn btn-xs" name="move_down" type="submit" formaction="/game/{{ game.id }}/form/edit/move_down"
+          <button class="btn btn-xs" name="move_down" title="Siirrä alaspäin" type="submit" formaction="/game/{{ game.id }}/form/edit/move_down"
             formmethod="POST" value="{{ question.position }}">
             <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
           </button>

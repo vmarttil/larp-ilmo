@@ -82,7 +82,6 @@ class FormEditForm(FlaskForm):
 class NewQuestionForm(FlaskForm):
     form_id = HiddenField()
     field_type = HiddenField()
-    option_ids = HiddenField()
     text = StringField('Kysymysteksti', widget=TextInput(), validators=[
         DataRequired(message="Kysymysteksti on pakollinen")])
     description = TextAreaField('Selitysteksti', widget=TextArea(), validators=[

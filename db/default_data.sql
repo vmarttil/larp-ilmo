@@ -25,7 +25,7 @@ INSERT INTO Question (
     VALUES
         (1,'Nimi','Ilmoittautujan koko nimi.',true, false, 'name'),
         (1,'Sähköposti','Sähköpostiosoite johon peliin liittyvät tiedotteet lähetetään.',true, false, 'email'),
-        (1,'Puhelinnumero','Puhelinnumero, josta ilmoittautujan tavoittaa tarvittaessa.',true, true, null),
+        (1,'Puhelinnumero','Puhelinnumero, josta ilmoittautujan tavoittaa tarvittaessa.',true, true, 'phone'),
         (2,'Ikä','Ilmoittautujan ikä pelin aikaan.',true, true, 'age'),
         (6,'Kuvaile itseäsi pelaajana','Kuvaile pelityyliäsi ja -mieltymyksiäsi, minkä tyyppisestä pelisisällöstä yleensä nautit, oletko enemmän aktiivinen vai reaktiivinen pelaaja, jne.',true, true, 'profile'),
         (3,'Hahmon toivottu sukupuoli','Sukupuoli jota edustavaa hahmoa haluat pelata (ei välttämättä sama kuin pelaajan sukupuoli).',true, true, null),

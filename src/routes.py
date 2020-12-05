@@ -92,11 +92,11 @@ def editform(game_id):
             question['options'] = gameforms.get_question_options(int(question['id']))
         return render_template("form_editor.html", game=game, form=form, questions=questions, field_types=field_types, action="/game/" + game_id + "/form/edit", title="Ilmoittautumislomakkeen muokkaus")    
     elif form.validate_on_submit() and request.form.get('field_type'):
-        form_data = {"form_id": request.form['form_id'], "field_type": request.form['field_type'], "option_ids": ""}
-        field_type = (request.form['field_type'])
+        form_data = {"form_id": request.form['form_id'], "field_type": request.form['field_type'], "text": "", "description": ""}
         field_type_name = gameforms.get_field_type_name(request.form['field_type'])
         form = NewQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-        return render_template("new_question.html", form=form, game=game, field_type=field_type, options=[], action="/game/" + game_id + "/form/edit/new_question", title="Uuden kysymyksen luonti: " + field_type_name)
+        print("Field type: " + request.form['field_type'] + " - " + field_type_name)
+        return render_template("new_question.html", form=form, game=game, options=[], action="/game/" + game_id + "/form/edit/new_question", title="Uuden kysymyksen luonti: " + field_type_name)
     else:
         return redirect("/game/" + game_id + "/form/edit")
 
@@ -128,32 +128,29 @@ def editform_new_question(game_id):
     field_type = request.form["field_type"]
     question_text = request.form["text"]
     description = request.form["description"]
-    if gameforms.add_new_question(form_id, field_type, question_text, description):
+    options = []
+    for field, value in request.form.items():
+        if 'option_text' in field and value.strip() != '':
+            options.append(value.strip())
+    if gameforms.add_new_question(form_id, field_type, question_text, description, options):
         flash("Kysymys lisätty", "success")
         return redirect("/game/" + game_id + "/form/edit")
     else:
         flash("Kysymyksen lisääminen ei onnistunut", "error")
         return redirect("/game/" + game_id + "/form/edit")
 
-# @app.route("/game/<game_id>/form/edit/new_option", methods=["post"])
-# def editform_new_option(game_id):
-#     game = games.get_details(game_id)
-#     option_ids = request.form["option_ids"]
-#     if request.form["option_text"] != "":
-#         option_text = request.form["option_text"]
-#         option_id = gameforms.add_new_option(option_text)
-#         option_ids = str(option_id) if option_ids == "" else option_ids + "," + str(option_id)
-#     if option_ids == "":
-#         options = []
-#     else:
-#         options = gameforms.get_option_texts(option_ids)
-#     print("Option_ids: " + option_ids)
-#     form_data = {"option_ids": 3 ,"form_id": request.form['form_id'], "field_type": request.form['field_type']}
-#     form = NewQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-#     form.option_ids.value = option_ids
-#     field_type = request.form['field_type']
-#     field_type_name = gameforms.get_field_type_name(request.form['field_type'])
-#     return render_template("new_question.html", form=form, game=game, field_type=field_type, options=options, action="/game/" + game_id + "/form/edit/new", title="Uuden kysymyksen luonti: " + field_type_name)
+@app.route("/game/<game_id>/form/edit/new_option", methods=["post"])
+def editform_new_option(game_id):
+    game = games.get_details(game_id)
+    options = []
+    for field, value in request.form.items():
+        if 'option_text' in field and value.strip() != '':
+            options.append(value.strip())
+    form_data = request.form
+    # form_data = {"form_id": request.form['form_id'], "field_type": request.form['field_type'], "text": request.form['text'], "description": request.form['description']}
+    form = NewQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
+    field_type_name = gameforms.get_field_type_name(request.form['field_type'])
+    return render_template("new_question.html", form=form, game=game, options=options, action="/game/" + game_id + "/form/edit/new_question", title="Uuden kysymyksen luonti: " + field_type_name)
 
 @app.route("/game/<game_id>/form/preview", methods=["get"])
 def previewform(game_id):
