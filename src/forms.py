@@ -86,4 +86,18 @@ class NewQuestionForm(FlaskForm):
         DataRequired(message="Kysymysteksti on pakollinen")])
     description = TextAreaField('Selitysteksti', widget=TextArea(), validators=[
         Length(min=0, max=200, message="Selitystekstin on oltava 0-200 merkkiä pitkä")])
+    submit = SubmitField('Lisää kysymys', widget=SubmitInput())
+
+class EditQuestionForm(FlaskForm):
+    formquestion_id = HiddenField()
+    field_type = HiddenField()
+    text = StringField('Kysymysteksti', widget=TextInput(), validators=[
+        DataRequired(message="Kysymysteksti on pakollinen")])
+    description = TextAreaField('Selitysteksti', widget=TextArea(), validators=[
+        Length(min=0, max=200, message="Selitystekstin on oltava 0-200 merkkiä pitkä")])
     submit = SubmitField('Tallenna kysymys', widget=SubmitInput())
+
+class PopupForm(FlaskForm):
+    attribute = HiddenField()
+    submit = SubmitField('OK', widget=SubmitInput())
+    cancel = SubmitField('Peruuta', widget=SubmitInput())

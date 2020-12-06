@@ -95,7 +95,6 @@ def editform(game_id):
         form_data = {"form_id": request.form['form_id'], "field_type": request.form['field_type'], "text": "", "description": ""}
         field_type_name = gameforms.get_field_type_name(request.form['field_type'])
         form = NewQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-        print("Field type: " + request.form['field_type'] + " - " + field_type_name)
         return render_template("new_question.html", form=form, game=game, options=[], action="/game/" + game_id + "/form/edit/new_question", title="Uuden kysymyksen luonti: " + field_type_name)
     else:
         return redirect("/game/" + game_id + "/form/edit")
@@ -114,13 +113,59 @@ def editform_move_down(game_id):
     gameforms.move_question_down(form_id, current_pos)
     return redirect("/game/" + game_id + "/form/edit")
 
-@app.route("/game/<game_id>/form/edit/edit", methods=["post"])
-def editform_edit(game_id):
-    return "Kysymysten muokkausta ei ole vielä toteutettu, vaan se toteutetaan projektin viimeistelyvaiheessa."
+@app.route("/game/<game_id>/form/edit/edit_question", methods=["post"])
+def editform_edit_question(game_id):
+    if request.form.get('add_option') or request.form.get('delete_option'):
+        game = games.get_details(game_id)
+        options = []
+        for field, value in request.form.items():
+            if 'option_text' in field and value.strip() != '' and request.form.get('delete_option') != value:
+                options.append(value.strip())
+        form_data = request.form
+        form = EditQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
+        field_type_name = gameforms.get_field_type_name(request.form['field_type'])
+        return render_template("edit_question.html", form=form, game=game, options=options, action="/game/" + game_id + "/form/edit/update_question", title="Kysymyksen muokkaus: " + field_type_name)
+    else: 
+        game = games.get_details(game_id)
+        question = gameforms.get_question(request.form["edit_question"])
+        form_data = {"formquestion_id": question['id'], "field_type": str(question['field_type']), "text": question['text'], "description": question['description']}
+        form = EditQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
+        field_type_name = gameforms.get_field_type_name(question['field_type'])    
+        options = map(lambda d: d['text'], question['options'])
+        return render_template("edit_question.html", form=form, game=game, options=options, action="/game/" + game_id + "/form/edit/update_question", title="Kysymyksen muokkaus: " + field_type_name)
+    
+@app.route("/game/<game_id>/form/edit/update_question", methods=["post"])
+def editform_update_question(game_id):
+    question_text = request.form["text"]
+    description = request.form["description"]
+    options = []
+    for field, value in request.form.items():
+        if 'option_text' in field and value.strip() != '':
+            options.append(value.strip())
+    if gameforms.update_question(request.form["formquestion_id"], question_text, description, options):
+        flash("Kysymystä muokattu", "success")
+        return redirect("/game/" + game_id + "/form/edit")
+    else:
+        flash("Kysymyksen muokkaaminen ei onnistunut", "error")
+        return redirect("/game/" + game_id + "/form/edit")
 
-@app.route("/game/<game_id>/form/edit/delete", methods=["post"])
+@app.route("/game/<game_id>/form/edit/delete_question", methods=["post"])
 def editform_delete(game_id):
-    return "Kysymysten poistoa ei ole vielä toteutettu, vaan se toteutetaan projektin viimeistelyvaiheessa."
+    if request.form.get('delete_question'):
+        formquestion_id = request.form['delete_question']
+        form_data = {"attribute": formquestion_id}
+        form = PopupForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
+        paragraphs = ["Oletko varma, että haluat poistaa kysymyksen:", "'" + gameforms.get_question_text(formquestion_id) + "'"]
+        return render_template("popup.html", form=form, action="/game/" + game_id + "/form/edit/delete_question", title="Poista kysymys", paragraphs=paragraphs)
+    if request.form.get('submit'):
+        if gameforms.delete_question(request.form['attribute']):
+            flash("Kysymys poistettu", "success")
+            return redirect("/game/" + game_id + "/form/edit")
+        else:
+            flash("Kysymyksen poistaminen ei onnistunut", "error")
+            return redirect("/game/" + game_id + "/form/edit")
+    else: 
+        return redirect("/game/" + game_id + "/form/edit")
 
 @app.route("/game/<game_id>/form/edit/new_question", methods=["post"])
 def editform_new_question(game_id):
@@ -132,15 +177,16 @@ def editform_new_question(game_id):
     for field, value in request.form.items():
         if 'option_text' in field and value.strip() != '':
             options.append(value.strip())
-    if gameforms.add_new_question(form_id, field_type, question_text, description, options):
+    position = gameforms.get_last_position(form_id)
+    if gameforms.add_new_question(form_id, field_type, question_text, description, options, position):
         flash("Kysymys lisätty", "success")
         return redirect("/game/" + game_id + "/form/edit")
     else:
         flash("Kysymyksen lisääminen ei onnistunut", "error")
         return redirect("/game/" + game_id + "/form/edit")
 
-@app.route("/game/<game_id>/form/edit/new_option", methods=["post"])
-def editform_new_option(game_id):
+@app.route("/game/<game_id>/form/edit/new_question/new_option", methods=["post"])
+def editform_new_question_new_option(game_id):
     game = games.get_details(game_id)
     options = []
     for field, value in request.form.items():

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}}{% endblock %}
+{% block app_content %}
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        <h2>{{ title }}</h2>
+      </div>
+      <div class="panel-body text-center">
+        <form action="{{ action }}" method="post" novalidate>
+          {{ form.hidden_tag() }}
+          {% for paragraph in paragraphs %}
+            <p>{{ paragraph }}</p>
+          {% endfor %}
+          <br />
+          {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+          {{ wtf.form_field(form.cancel, class='btn') }}
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+{% endblock %}

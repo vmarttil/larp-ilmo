@@ -23,6 +23,10 @@
                 {% for option in options %}
                 <li>
                   {{ option }}
+                  <button class="btn btn-xs" name="delete_option" title="Poista" type="submit" formaction="/game/{{ game.id }}/form/edit/edit_question"
+                  formmethod="POST" value="{{ option }}">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+          </button>
                   <input type="hidden" id="option_{{ loop.index }}_hidden" name="option_text_{{ loop.index }}"
                     value="{{ option }}">
                 </li>
@@ -33,7 +37,7 @@
                       name="new_option_text" type="text" value>
                     <span class="input-group-btn">
                       <button class="btn btn-primary btn-xs" name="add_option" type="submit"
-                        formaction="/game/{{ game.id }}/form/edit/new_question/new_option" formmethod="POST" value="add_option">Lisää
+                        formaction="/game/{{ game.id }}/form/edit/edit_question" formmethod="POST" value="add_option">Lisää
                         valinta</button>
                     </span>
                   </div>
