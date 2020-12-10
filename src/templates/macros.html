@@ -6,10 +6,6 @@
 {{ render_integer_field(question) }}
 {% elif question['field_type'] == 'RadioField' %}
 {{ render_radio_field(question) }}
-{% elif question['field_type'] == 'SelectField' %}
-{{ render_select_field(question) }}
-{% elif question['field_type'] == 'SelectMultipleField' %}
-{{ render_select_multiple_field(question) }}
 {% elif question['field_type'] == 'TextAreaField' %}
 {{ render_text_area_field(question) }}
 {% elif question['field_type'] == 'CheckboxListField' %}
@@ -76,28 +72,6 @@
 </div>
 {% endmacro %}
 
-<!-- Macro for rendering questions of type SelectField -->
-{% macro render_select_field(question) %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="question_text">[To be implemented]</p>
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-<!-- Macro for rendering questions of type SelectMultipleField -->
-{% macro render_select_multiple_field(question) %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="question_text">[To be implemented]</p>
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
 <!-- Macro for rendering questions of type TextAreaField -->
 {% macro render_text_area_field(question) %}
 <div class="row">
@@ -145,10 +119,6 @@
 {{ render_integer_field_disabled(question) }}
 {% elif question['field_type'] == 'RadioField' %}
 {{ render_radio_field_disabled(question) }}
-{% elif question['field_type'] == 'SelectField' %}
-{{ render_select_field_disabled(question) }}
-{% elif question['field_type'] == 'SelectMultipleField' %}
-{{ render_select_multiple_field_disabled(question) }}
 {% elif question['field_type'] == 'TextAreaField' %}
 {{ render_text_area_field_disabled(question) }}
 {% elif question['field_type'] == 'CheckboxListField' %}
@@ -203,28 +173,6 @@
 </div>
 {% endmacro %}
 
-<!-- Macro for rendering disabled versions of questions of type SelectField -->
-{% macro render_select_field_disabled(question) %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="question_text">[To be implemented]</p>
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-<!-- Macro for rendering disabled versions of questions of type SelectMultipleField -->
-{% macro render_select_multiple_field_disabled(question) %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="question_text">[To be implemented]</p>
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
 <!-- Macro for rendering disabled versions of questions of type TextAreaField -->
 {% macro render_text_area_field_disabled(question) %}
 <div class="row">
@@ -268,10 +216,6 @@
 {{ render_integer_field_filled(question) }}
 {% elif question['field_type'] == 'RadioField' %}
 {{ render_radio_field_filled(question) }}
-{% elif question['field_type'] == 'SelectField' %}
-{{ render_select_field_filled(question) }}
-{% elif question['field_type'] == 'SelectMultipleField' %}
-{{ render_select_multiple_field_filled(question) }}
 {% elif question['field_type'] == 'TextAreaField' %}
 {{ render_text_area_field_filled(question) }}
 {% elif question['field_type'] == 'CheckboxListField' %}
@@ -323,28 +267,6 @@
         </label>
       </div>
       {% endfor %}
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-<!-- Macro for rendering filled versions of questions of type SelectField -->
-{% macro render_select_field_filled(question) %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="question_text">[To be implemented]</p>
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-<!-- Macro for rendering filled versions of questions of type SelectMultipleField -->
-{% macro render_select_multiple_field_filled(question) %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group">
-      <label class="question_text">[To be implemented]</p>
     </div>
   </div>
 </div>
@@ -431,12 +353,6 @@
         {% elif question['field_type'] == 'RadioField' %}
         <img src="{{url_for('.static', filename='images/noun_radio button_116305.svg')}}" style="height: 2em;"
           alt="Radio button by Arthur Shlain from the Noun Project" />
-        {% elif question['field_type'] == 'SelectField' %}
-        <img src="{{url_for('.static', filename='images/noun_select_116285.svg')}}" style="height: 2em;"
-          alt="Select by Arthur Shlain from the Noun Project" />
-        {% elif question['field_type'] == 'SelectMultipleField' %}
-        <img src="{{url_for('.static', filename='images/noun_select_116285.svg')}}" style="height: 2em;"
-          alt="Select by Arthur Shlain from the Noun Project" />
         {% elif question['field_type'] == 'TextAreaField' %}
         <img src="{{url_for('.static', filename='images/noun_textarea_116328.svg')}}" style="height: 2em;"
           alt="Textarea by Arthur Shlain from the Noun Project" />
@@ -445,7 +361,7 @@
           alt="Checklist by Arthur Shlain from the Noun Project" />
         {% endif %}
       </div>
-      {% if question['field_type'] == 'RadioField' or question['field_type'] == 'CheckboxListField' or question['field_type'] == 'SelectField' or question['field_type'] == 'SelectMultipleField' %}
+      {% if question['field_type'] == 'RadioField' or question['field_type'] == 'CheckboxListField' %}
       <div class="col-md-7 small">
         {{ question.description }}
       </div>

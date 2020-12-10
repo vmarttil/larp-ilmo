@@ -19,7 +19,7 @@
           <form id="registration_form">
         {% endif %}
           {{ form.hidden_tag() }}
-          {% for question in questions %}
+          {% for question in question_list %}
             {% if mode == "register" %}
               {{ render_question(question) }}
             {% else %}

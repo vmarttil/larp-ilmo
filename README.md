@@ -84,4 +84,10 @@ on täytetty ja käyttäjä klikkaa sivun alareunassa olevaa "Ilmoittaudu"-paini
 tietokantaan ja sovellus palauttaa käyttäjän pääsivulle. Käyttäjä voi tarkastella omia ilmoittautumisiaan omalla profiilisivulla
 ja pelin luonut käyttäjä näkee pelin tietojen alla siihen tehdyt ilmoittautumiset.
 
+## Mahdollisia lisätoiminnallisuuksia ja jatkokehitysideoita
 
+- linkki pelin kotisivuille pelin tietoihin
+- useamman tyyppisiä kysymyksiä (samaa/eri mieltä -asteikko, yms.)
+- valintojen minimi- ja maksimimäärän määritys ilmoittautumislomakkeen valintaruutu-tyyppisille kysymyksille
+- mahdollisuus lisätä omaan profiiliin tekstialue-kenttiä ja tuoda niiden sisältö ilmoittautumislomakkeen tekstialuekenttään
+- pelin tiedot syöttäneelle käyttäjälle mahdollisuus lisätä muita käyttäjiä pelin järjestäjiksi

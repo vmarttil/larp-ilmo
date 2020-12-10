@@ -15,7 +15,7 @@
         <form class="form-horizontal" id="registration_form" action='{{ action }}' method="post" novalidate>
           {{ form.hidden_tag() }}
           <div class="panel-group">
-            {% for question in questions %}
+            {% for question in question_list %}
             {{ render_question_placeholder(question) }}
             {% endfor %}
           </div>

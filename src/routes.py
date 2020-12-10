@@ -2,7 +2,7 @@ import sys
 from app import app
 from flask import render_template, request, redirect, flash, url_for, session
 import datetime
-import games, users, gameforms
+import games, users, gameforms, questions, answers
 from forms import *
 
 @app.route("/")
@@ -87,10 +87,10 @@ def editform(game_id):
     form = FormEditForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
     field_types = gameforms.get_field_types()
     if request.method == 'GET':
-        questions = gameforms.get_form_questions(gameform['id'])        
-        for question in questions:
-            question['options'] = gameforms.get_question_options(int(question['id']))
-        return render_template("form_editor.html", game=game, form=form, questions=questions, field_types=field_types, action="/game/" + game_id + "/form/edit", title="Ilmoittautumislomakkeen muokkaus")    
+        question_list = gameforms.get_form_questions(gameform['id'])        
+        for question in question_list:
+            question['options'] = questions.get_question_options(int(question['id']))
+        return render_template("form_editor.html", game=game, form=form, question_list=question_list, field_types=field_types, action="/game/" + game_id + "/form/edit", title="Ilmoittautumislomakkeen muokkaus")    
     elif form.validate_on_submit() and request.form.get('field_type'):
         form_data = {"form_id": request.form['form_id'], "field_type": request.form['field_type'], "text": "", "description": ""}
         field_type_name = gameforms.get_field_type_name(request.form['field_type'])
@@ -103,14 +103,14 @@ def editform(game_id):
 def editform_move_up(game_id):
     form_id = request.form["form_id"]
     current_pos = request.form["move_up"]
-    gameforms.move_question_up(form_id, current_pos)
+    questions.move_question_up(form_id, current_pos)
     return redirect("/game/" + game_id + "/form/edit")
 
 @app.route("/game/<game_id>/form/edit/move_down", methods=["post"])
 def editform_move_down(game_id):
     form_id = request.form["form_id"]
     current_pos = request.form["move_down"]
-    gameforms.move_question_down(form_id, current_pos)
+    questions.move_question_down(form_id, current_pos)
     return redirect("/game/" + game_id + "/form/edit")
 
 @app.route("/game/<game_id>/form/edit/edit_question", methods=["post"])
@@ -127,7 +127,7 @@ def editform_edit_question(game_id):
         return render_template("edit_question.html", form=form, game=game, options=options, action="/game/" + game_id + "/form/edit/update_question", title="Kysymyksen muokkaus: " + field_type_name)
     else: 
         game = games.get_details(game_id)
-        question = gameforms.get_question(request.form["edit_question"])
+        question = questions.get_question(request.form["edit_question"])
         form_data = {"formquestion_id": question['id'], "field_type": str(question['field_type']), "text": question['text'], "description": question['description']}
         form = EditQuestionForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
         field_type_name = gameforms.get_field_type_name(question['field_type'])    
@@ -142,7 +142,7 @@ def editform_update_question(game_id):
     for field, value in request.form.items():
         if 'option_text' in field and value.strip() != '':
             options.append(value.strip())
-    if gameforms.update_question(request.form["formquestion_id"], question_text, description, options):
+    if questions.update_question(request.form["formquestion_id"], question_text, description, options):
         flash("Kysymystä muokattu", "success")
         return redirect("/game/" + game_id + "/form/edit")
     else:
@@ -155,10 +155,10 @@ def editform_delete(game_id):
         formquestion_id = request.form['delete_question']
         form_data = {"attribute": formquestion_id}
         form = PopupForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-        paragraphs = ["Oletko varma, että haluat poistaa kysymyksen:", "'" + gameforms.get_question_text(formquestion_id) + "'"]
+        paragraphs = ["Oletko varma, että haluat poistaa kysymyksen:", "'" + questions.get_question_text(formquestion_id) + "'"]
         return render_template("popup.html", form=form, action="/game/" + game_id + "/form/edit/delete_question", title="Poista kysymys", paragraphs=paragraphs)
     if request.form.get('submit'):
-        if gameforms.delete_question(request.form['attribute']):
+        if questions.delete_question(request.form['attribute']):
             flash("Kysymys poistettu", "success")
             return redirect("/game/" + game_id + "/form/edit")
         else:
@@ -178,7 +178,7 @@ def editform_new_question(game_id):
         if 'option_text' in field and value.strip() != '':
             options.append(value.strip())
     position = gameforms.get_last_position(form_id)
-    if gameforms.add_new_question(form_id, field_type, question_text, description, options, position):
+    if questions.add_new_question(form_id, field_type, question_text, description, options, position):
         flash("Kysymys lisätty", "success")
         return redirect("/game/" + game_id + "/form/edit")
     else:
@@ -206,10 +206,10 @@ def previewform(game_id):
     gameform = gameforms.get_game_form(game_id)
     form_data = {"form_id": gameform['id'], "form_name": gameform['name']}
     form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-    questions = gameforms.get_form_questions(gameform['id'])        
-    for question in questions:
-        question['options'] = gameforms.get_question_options(int(question['id']))
-    return render_template("form_preview.html", game=game, form=form, questions=questions, action="" , title="Ilmoittautumislomakkeen esikatselu")
+    question_list = gameforms.get_form_questions(gameform['id'])        
+    for question in question_list:
+        question['options'] = questions.get_question_options(int(question['id']))
+    return render_template("form_preview.html", game=game, form=form, question_list=question_list, action="", title="Ilmoittautumislomakkeen esikatselu")
 
 @app.route("/game/<game_id>/register", methods=["get", "post"])
 def gameregistration(game_id):
@@ -218,11 +218,11 @@ def gameregistration(game_id):
     form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
     form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
     if request.method == 'GET':    
-        questions = gameforms.get_form_questions(gameform['id'])
+        question_list = gameforms.get_form_questions(gameform['id'])
         prefill_data = users.get_prefill_data(game)
-        for question in questions:
-            question['options'] = gameforms.get_question_options(question['id'])
-        return render_template("registration.html", game=game, form=form, questions=questions, prefill_data=prefill_data, action="/game/" + game_id + "/register" , title="Ilmoittautuminen: " + game['name'], mode="register")
+        for question in question_list:
+            question['options'] = questions.get_question_options(question['id'])
+        return render_template("registration.html", game=game, form=form, question_list=question_list, prefill_data=prefill_data, action="/game/" + game_id + "/register" , title="Ilmoittautuminen: " + game['name'], mode="register")
     if form.validate_on_submit():
         answer_list = []
         for key, value in request.form.items():
@@ -230,7 +230,7 @@ def gameregistration(game_id):
                 answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "option_id": value})
             elif "integer" in key or "string" in key or "textarea" in key:
                 answer_list.append({"person_id": users.user_id(), "formquestion_id": key.split("_")[1], "answer_text": value})
-        if gameforms.save_answers(users.user_id(), game_id, answer_list):
+        if answers.save_answers(users.user_id(), game_id, answer_list):
             flash("Ilmoittautuminen tallennettu", "success")
             return redirect(url_for("index"))
         else:
@@ -245,11 +245,11 @@ def viewgameregistration(game_id, registration_id):
     gameform = gameforms.get_game_form(game_id)
     form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
     form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-    questions = gameforms.get_form_questions(gameform['id'])        
-    for question in questions:
-        question['options'] = gameforms.get_question_options(question['id'])
-        question['answer'] = gameforms.get_question_answer(registration_id, question['id'])
-    return render_template("registration.html", form=form, questions=questions, action="", title="Ilmoittautuminen: " + game['name'], mode="game", game_id=game_id)
+    question_list = gameforms.get_form_questions(gameform['id'])        
+    for question in question_list:
+        question['options'] = questions.get_question_options(question['id'])
+        question['answer'] = answers.get_question_answer(registration_id, question['id'])
+    return render_template("registration.html", form=form, question_list=question_list, action="", title="Ilmoittautuminen: " + game['name'], mode="game", game_id=game_id)
 
 @app.route("/user/profile", methods=["get", "post"])
 def editprofile():
@@ -280,11 +280,11 @@ def viewpersonregistration(registration_id):
     gameform = gameforms.get_game_form(game_id)
     form_data = {"form_id": gameform['id'], "form_name": gameform['name'], "published": gameform['published']}
     form = RegistrationForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})
-    questions = gameforms.get_form_questions(gameform['id'])        
-    for question in questions:
-        question['options'] = gameforms.get_question_options(question['id'])
-        question['answer'] = gameforms.get_question_answer(registration_id, question['id'])
-    return render_template("registration.html", form=form, questions=questions, action="", title="Ilmoittautuminen: " + game['name'], mode="person")
+    question_list = gameforms.get_form_questions(gameform['id'])        
+    for question in question_list:
+        question['options'] = questions.get_question_options(question['id'])
+        question['answer'] = answers.get_question_answer(registration_id, question['id'])
+    return render_template("registration.html", form=form, question_list=question_list, action="", title="Ilmoittautuminen: " + game['name'], mode="person")
 
 @app.route("/login", methods=["get","post"])
 def login():
