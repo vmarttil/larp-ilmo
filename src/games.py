@@ -1,7 +1,8 @@
 from db import db
-import users
+import utils
 
 def get_list():
+    '''Return a list of all games in the database as a list of dictionaries.'''
     sql =  "SELECT \
                 g.id, \
                 g.name, \
@@ -22,10 +23,11 @@ def get_list():
             GROUP BY g.id, g.name, g.start_date, g.end_date, g.location, g.price, go.person_id, f.published \
             ORDER BY start_date"
     result = db.session.execute(sql)
-    game_list = result.fetchall()
+    game_list = utils.to_dict_list(result.fetchall())
     return game_list
 
 def get_details(id):
+    '''Return all the information about the given game as a dictionary.'''
     sql_game = "SELECT \
                     g.id, \
                     g.name, \
@@ -47,6 +49,7 @@ def get_details(id):
     return game
 
 def get_organisers(game_id):
+    '''Return the id, name components and email of the organisers for the given game as a list of dictionaries.'''
     sql_orgs =  "SELECT \
                     p.id, \
                     p.first_name, \
@@ -59,10 +62,11 @@ def get_organisers(game_id):
                 WHERE go.game_id = :id \
                 ORDER BY p.last_name"
     result_orgs = db.session.execute(sql_orgs, {"id":game_id})
-    organisers = result_orgs.fetchall()
+    organisers = utils.to_dict_list(result_orgs.fetchall())
     return organisers
 
 def get_registrations(game_id):
+    '''Return all registrations for the given game as a list of dictionaries.'''
     sql_regs =  "SELECT \
                     ROW_NUMBER() OVER (ORDER BY r.submitted ASC) AS number, \
                     r.id, \
@@ -79,10 +83,11 @@ def get_registrations(game_id):
                     AND q.prefill_tag = 'name'\
                 ORDER BY r.submitted ASC"
     result_regs = db.session.execute(sql_regs, {"id":game_id})
-    registrations = result_regs.fetchall()
+    registrations = utils.to_dict_list(result_regs.fetchall())
     return registrations
 
 def get_registration_game(registration_id):
+    '''Return the id of the game the registration is linked to.'''
     sql =  "SELECT \
                 game_id \
             FROM Registration \
@@ -91,10 +96,8 @@ def get_registration_game(registration_id):
     game_id = result.fetchone()[0]
     return game_id
 
-def send(id, name, start_date, end_date, location, price, description):
-    person_id = users.user_id()
-    if person_id == 0:
-        return False
+def send(person_id, id, name, start_date, end_date, location, price, description):
+    '''Insert the information for a game, either new or existing, into the database.'''
     if id is None:
         sql =  "INSERT INTO Game (\
                     name, \

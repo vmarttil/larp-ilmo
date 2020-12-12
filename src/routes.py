@@ -14,19 +14,20 @@ def index():
 def newgame():
     form = GameForm(meta={'locales': ['fi_FI', 'fi']})
     if form.validate_on_submit():
-        id = None
-        name = request.form["name"]
-        start_date = datetime.datetime.strptime(request.form["start_date"], '%d.%m.%Y')
-        end_date = datetime.datetime.strptime(request.form["end_date"], '%d.%m.%Y')
-        price = request.form["price"]        
-        location = request.form["location"]
-        description = request.form["description"]
-        if games.send(id, name, start_date, end_date, location, price, description):
-            flash("Pelin tiedot tallennettu", "success")
-            return redirect(url_for("index"))
-        else:
-            flash("Pelin lisääminen ei onnistunut", "error")
-            return redirect(url_for("newgame"))
+        if users.user_id() > 0:
+            game_id = None
+            name = request.form["name"]
+            start_date = datetime.datetime.strptime(request.form["start_date"], '%d.%m.%Y')
+            end_date = datetime.datetime.strptime(request.form["end_date"], '%d.%m.%Y')
+            price = request.form["price"]        
+            location = request.form["location"]
+            description = request.form["description"]
+            if games.send(users.user_id(), game_id, name, start_date, end_date, location, price, description):
+                flash("Pelin tiedot tallennettu", "success")
+                return redirect(url_for("index"))
+            else:
+                flash("Pelin lisääminen ei onnistunut", "error")
+                return redirect(url_for("newgame"))
     return render_template("game_editor.html", form=form, action="/game/new", title="Uuden pelin luonti", has_form=False, his_published=False)
 
 @app.route("/game/<game_id>/edit", methods=["get", "post"])
@@ -61,7 +62,7 @@ def editgame(game_id):
         location = request.form["location"]
         price = request.form["price"]
         description = request.form["description"]
-        if games.send(game_id, name, start_date, end_date, location, price, description):
+        if games.send(users.user_id(), game_id, name, start_date, end_date, location, price, description):
             flash("Pelin tiedot päivitetty", "success")
             return redirect("/game/" + game_id + "/edit")
         else:

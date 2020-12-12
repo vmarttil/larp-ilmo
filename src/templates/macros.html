@@ -62,7 +62,7 @@
       <div class="radio">
         <label>
           <input type="radio" name="radio_{{ question.id }}" id="{{ question.id }}_{{ option.id }}"
-            value="{{ option.id }}" />
+            value="{{ option.id }}" required/>
           {{ option.text }}
         </label>
       </div>
@@ -81,9 +81,9 @@
       <span class="question_desc">{{ question.description }}</span>
       {% if question.prefill_tag != None %}
       <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}"
-        rows="12">{{ prefill_data[question.prefill_tag] }}</textarea>
+        rows="12" required>{{ prefill_data[question.prefill_tag] }}</textarea>
       {% else %}
-      <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12"></textarea>
+      <textarea class="form-control" id="{{ question.id }}" name="textarea_{{ question.id }}" rows="12" required></textarea>
       {% endif %}
     </div>
   </div>

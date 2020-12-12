@@ -2,6 +2,7 @@ from db import db
 import utils
 
 def get_question(formquestion_id):
+    '''Get all the information for the given form instance of a question as a dictionary.'''
     sql =  "SELECT \
                 fq.id, \
                 fq.form_id, \
@@ -20,11 +21,13 @@ def get_question(formquestion_id):
     return question
 
 def get_question_id(formquestion_id):
+    '''Get the id of the base question based on the id of its particular form instance.'''
     sql = "SELECT question_id FROM FormQuestion WHERE id = :formquestion_id;"
     result = db.session.execute(sql, {"formquestion_id":formquestion_id}) 
     return result.fetchone()[0]
 
 def get_question_text(formquestion_id):
+    '''Get the question text of a question based on the id of its particular form instance.'''
     sql =  "SELECT question_text \
             FROM Question AS q \
                 JOIN FormQuestion AS fq \
@@ -34,6 +37,7 @@ def get_question_text(formquestion_id):
     return result.fetchone()[0]
 
 def get_question_options(formquestion_id):
+    '''Get the options of a particular question as a list of dictionaries, based on form instance id.'''
     sql =  "SELECT \
                 o.id, \
                 o.option_text AS text \
@@ -48,6 +52,7 @@ def get_question_options(formquestion_id):
     return question_options
 
 def move_question_up(form_id, current_pos):
+    '''Move the question at the given position in the selected form upwards one position.'''
     sql_1 = "UPDATE FormQuestion \
                 SET position = :current_pos - 1 \
              WHERE position = :current_pos \
@@ -65,6 +70,7 @@ def move_question_up(form_id, current_pos):
     return True
 
 def move_question_down(form_id, current_pos):
+    '''Move the question at the given position in the selected form downwards one position.'''
     sql_1 = "UPDATE FormQuestion \
                 SET position = :current_pos + 1 \
              WHERE position = :current_pos \
@@ -82,12 +88,16 @@ def move_question_down(form_id, current_pos):
     return True
 
 def delete_question(formquestion_id):
+    '''Remove the selected question form instance from the form.
+    
+    The questions following the deleted question are moved upwards one step. If the question is 
+    neither a default question nor used anywhere else, it is also deleted from the database.'''
     default = is_default(formquestion_id)
     question_id = get_question_id(formquestion_id)
     form_position = remove_question(formquestion_id)
     sql_move = "UPDATE FormQuestion SET position = position - 1 WHERE form_id = :form_id AND position > :position;"
     db.session.execute(sql_move, {"form_id": form_position[0], "position": form_position[1]})
-    if default == False and is_used(question_id) == False:
+    if default == False and count_forms_for_question(question_id) == 0:
         delete_options(question_id)
         sql_delete = "DELETE FROM Question WHERE id = :question_id;"
         db.session.execute(sql_delete, {"question_id": question_id})
@@ -95,11 +105,13 @@ def delete_question(formquestion_id):
     return True
 
 def delete_options(question_id):
+    '''Delete all the options of the selected question from the database.'''
     sql = "DELETE FROM Option WHERE question_id = :question_id;"
     db.session.execute(sql, {"question_id": question_id})
     return True
 
 def remove_question(formquestion_id):
+    '''Delete the question from the database and return its previous '''
     sql = "DELETE FROM FormQuestion WHERE id = :formquestion_id RETURNING form_id, position;"
     result = db.session.execute(sql, {"formquestion_id": formquestion_id})
     form_position = result.fetchone()
@@ -107,6 +119,7 @@ def remove_question(formquestion_id):
     return form_position
 
 def add_new_question(form_id, field_type, question_text, description, options, position):
+    '''Add a new question to the database and insert it to the current form.'''
     sql_question = "INSERT INTO Question ( \
                         field_type, \
                         question_text, \
@@ -131,7 +144,12 @@ def add_new_question(form_id, field_type, question_text, description, options, p
     return True
 
 def update_question(formquestion_id, question_text, description, options):
-    if is_default(formquestion_id) or count_forms_for_question(formquestion_id) > 1:
+    '''Update the text, description and options of a question based on its form instance id.
+    
+    If the question is a default one or used also in some other form, a new question is created 
+    with the edits and substituted for the original in the form, leaving the original unchanged.'''
+    question_id = get_question_id(formquestion_id)
+    if is_default(formquestion_id) or count_forms_for_question(question_id) > 1:
         old_question = get_question(formquestion_id)
         add_new_question(old_question['form_id'], old_question['field_type'], question_text, description, options, old_question['position'])
         remove_question(formquestion_id)
@@ -142,11 +160,12 @@ def update_question(formquestion_id, question_text, description, options):
                             description = :description \
                         WHERE id = :question_id;"
         db.session.execute(sql_question, {"question_id": question_id, "question_text": question_text, "description": description})
-        db.session.commit()
         update_options(question_id, options)
+    db.session.commit()
     return True
 
 def is_default(formquestion_id):
+    '''Check whether the question is a default question.'''
     sql =  "SELECT \
                 is_default \
             FROM Question AS q \
@@ -156,36 +175,14 @@ def is_default(formquestion_id):
     result = db.session.execute(sql, {"formquestion_id":formquestion_id})
     return result.fetchone()[0]
 
-def is_used(question_id):
-    sql =  "SELECT \
-                COUNT(1) \
-            FROM FormQuestion \
-            WHERE question_id = :question_id;"
+def count_forms_for_question(question_id):
+    '''Count the number of forms in which the given question is used.'''
+    sql = "SELECT COUNT(DISTINCT form_id) FROM FormQuestion WHERE question_id = :question_id;"
     result = db.session.execute(sql, {"question_id":question_id})
-    if result.fetchone()[0] == 0:
-        return False
-    else:
-        return True
-
-def count_forms_for_question(formquestion_id):
-    sql = "SELECT COUNT(DISTINCT form_id) FROM FormQuestion WHERE id = :formquestion_id;"
-    result = db.session.execute(sql, {"formquestion_id":formquestion_id})
     return result.fetchone()[0]
 
-def add_new_options(question_id, options):
-    sql_option =   "INSERT INTO Option ( \
-                        question_id, \
-                        option_text \
-                        ) VALUES ( \
-                        :question_id, \
-                        :option_text \
-                        );"
-    for option in options:
-        db.session.execute(sql_option, {"question_id": question_id, "option_text":option})
-    db.session.commit()
-    return True
-
 def update_options(question_id, options):
+    '''Update the options of the given question to correspond to the provided list.'''
     new_options = options
     old_options = get_options(question_id)
     for option in old_options:
@@ -197,6 +194,7 @@ def update_options(question_id, options):
     return True
 
 def get_options(question_id):
+    '''Get the the options (id and text) for the given question.'''
     sql = "SELECT \
             id, \
             option_text \
@@ -205,8 +203,21 @@ def get_options(question_id):
     result = db.session.execute(sql, {"question_id":question_id}) 
     return utils.to_dict_list(result.fetchall())
 
+def add_new_options(question_id, options):
+    '''Add a list of new options to the given question.'''
+    sql_option =   "INSERT INTO Option ( \
+                        question_id, \
+                        option_text \
+                        ) VALUES ( \
+                        :question_id, \
+                        :option_text \
+                        );"
+    for option in options:
+        db.session.execute(sql_option, {"question_id": question_id, "option_text":option})
+    return True
+
 def delete_option(id):
+    '''Delete the given option from the database based on its id.'''
     sql = "DELETE FROM Option WHERE id = :id;"
     db.session.execute(sql, {"id": id})
-    db.session.commit()
     return True

@@ -1,8 +1,9 @@
 from db import db
 
 def save_answers(person_id, game_id, answer_list):
+    '''Save all the answers of a filled registration form to the database.'''
     sql_registration = "INSERT INTO Registration (person_id, game_id, submitted) \
-                            VALUES (:person_id, :game_id, NOW()) \
+                        VALUES (:person_id, :game_id, NOW()) \
                         RETURNING id;"
     result = db.session.execute(sql_registration, {"person_id": person_id, "game_id":game_id})
     registration_id = result.fetchone()[0]
@@ -11,24 +12,24 @@ def save_answers(person_id, game_id, answer_list):
                     formquestion_id, \
                     answer_text \
                     ) VALUES ( \
-                        :registration_id, \
-                        :formquestion_id, \
-                        :answer_text \
-                        );"
+                    :registration_id, \
+                    :formquestion_id, \
+                   :answer_text \
+                    );"
     sql_answer = "INSERT INTO Answer ( \
-                    registration_id, \
-                    formquestion_id \
-                    ) VALUES ( \
-                        :registration_id, \
-                        :formquestion_id \
-                        ) RETURNING id;"
+                      registration_id, \
+                      formquestion_id \
+                      ) VALUES ( \
+                      :registration_id, \
+                      :formquestion_id \
+                      ) RETURNING id;"
     sql_option = "INSERT INTO AnswerOption ( \
-                    answer_id, \
-                    option_id \
-                    ) VALUES ( \
-                        :answer_id, \
-                        :option_id \
-                        );"
+                      answer_id, \
+                      option_id \
+                      ) VALUES ( \
+                      :answer_id, \
+                      :option_id \
+                      );"
     last_question = 0
     answer_id = 0
     for answer in answer_list:
@@ -43,6 +44,11 @@ def save_answers(person_id, game_id, answer_list):
     return True
 
 def get_question_answer(registration_id, formquestion_id):
+    '''Get the answer for the given question in the given registration form from the database.
+    
+    If the question is a text field, number field or text area, the answer text is returned, 
+    and if the question is a multiple choice one, a list of options (or an empty list if no 
+    options are selected) is returned.'''
     sql =  "SELECT \
                 a.answer_text AS text, \
                 ARRAY( \
@@ -57,8 +63,11 @@ def get_question_answer(registration_id, formquestion_id):
                 AND fq.id = :formquestion_id;"
     result = db.session.execute(sql, {"registration_id": registration_id, "formquestion_id": formquestion_id})
     result = result.fetchone()
-    if result[0] == None:
-        answer = list(result[1])
-    else:
-        answer = result[0]
-    return answer
+    if result == None:
+        return []
+    else:   
+        if result[0] == None:
+            answer = list(result[1])
+        else:
+            answer = result[0]
+        return answer
