@@ -44,7 +44,7 @@ Sovellus sisältää tietokantarakenteet, palvelintoiminnallisuuden ja käyttöl
 - yksittäisen ilmoittautumisen tarkastelu
 
 ## Sovelluksen tietokantarakenne
-![Database diagram](https://github.com/vmarttil/larp-ilmo/blob/main/images/larp-ilmo_3.png)
+![Database diagram](https://github.com/vmarttil/larp-ilmo/blob/main/images/larp-ilmo_4.png)
 
 ## Sovelluksen käyttöhje
 
