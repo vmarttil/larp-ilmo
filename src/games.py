@@ -96,6 +96,16 @@ def get_registration_game(registration_id):
     game_id = result.fetchone()[0]
     return game_id
 
+def get_registration_person(registration_id):
+    '''Return the id of the person the registration is linked to.'''
+    sql =  "SELECT \
+                person_id \
+            FROM Registration \
+            WHERE id = :registration_id"
+    result = db.session.execute(sql, {"registration_id": registration_id})
+    person_id = result.fetchone()[0]
+    return person_id
+
 def send(person_id, id, name, start_date, end_date, location, price, description):
     '''Insert the information for a game, either new or existing, into the database.'''
     if id is None:
