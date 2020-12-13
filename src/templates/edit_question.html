@@ -23,9 +23,9 @@
                 {% for option in options %}
                 <li>
                   {{ option }}
-                  <button class="btn btn-xs" name="delete_option" title="Poista" type="submit" formaction="/game/{{ game.id }}/form/edit/edit_question"
+                  <button class="btn btn-xs" style="transform: scale(0.8)" name="delete_option" title="Poista" type="submit" formaction="/game/{{ game.id }}/form/edit/edit_question"
                   formmethod="POST" value="{{ option }}">
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
           </button>
                   <input type="hidden" id="option_{{ loop.index }}_hidden" name="option_text_{{ loop.index }}"
                     value="{{ option }}">

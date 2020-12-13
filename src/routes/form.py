@@ -10,6 +10,8 @@ def editform(game_id):
     game = games.get_details(game_id)
     if users.user_id() not in map(lambda org: org['id'], game['organisers']):
         return redirect(url_for("index"))
+    if len(games.get_registrations(game_id)) > 0:
+        return redirect("/game/" + game_id + "/edit")
     gameform = gameforms.get_game_form(game_id)
     form_data = {"form_id": gameform['id'], "form_name": gameform['name']}
     form = FormEditForm(data=form_data, meta={'locales': ['fi_FI', 'fi']})

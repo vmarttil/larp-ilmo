@@ -39,6 +39,8 @@ def editgame(game_id):
     if request.method == 'GET':
         has_form = False if gameforms.get_game_form(game_id) is None else True
         is_published = gameforms.is_published(game_id)
+        if len(games.get_registrations(game_id)) > 0:
+            form.edit_form.render_kw = {'disabled': 'disabled'}
         return render_template("game_editor.html", form=form, action="/game/" + game_id + "/edit" , title=game['name'] + ": Tietojen päivitys", has_form=has_form, is_published=is_published)
     if request.method == 'POST':
         if 'create_form' in request.form:

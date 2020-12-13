@@ -90,7 +90,9 @@ muokkausikkunan, jossa kysymyksen tietoja (kysymysteksti, kuvaus ja mahdolliset 
 muokatut tiedot tallennetaan tietokantaan kun käyttäjä napsauttaa "Tallenna kysymys" -painiketta. Kysymyksiä voi lisätä 
 lomakkeeseen valitsemalla lomakkeen alareunan "Lisää uusi kysymys" -kohdassa halutun kysymystyypin ja napsauttamalla 
 "Lisää"-painiketta, jolloin aukeaa tyhjä kysymyksen muokkausikkuna. Muokkausnäkymän alareunassa on myös painike, jolla 
-lomaketta voi esikatsella siinä muodossa kun se tulee näkymään käyttäjälle, mutta ilman täyttömahdollisuuta.
+lomaketta voi esikatsella siinä muodossa kun se tulee näkymään käyttäjälle, mutta ilman täyttömahdollisuuta. 
+Jos ilmoittautumislomakkeeseen on olemassa vastauksia, eli sitä käyttävään peliin on ilmoittauduttu, lomaketta ei voi 
+enää muokata.
 
 ### Ilmoittautuminen
 
