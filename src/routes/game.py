@@ -1,8 +1,9 @@
 import sys
 from app import app
-from flask import render_template, request, redirect, flash, url_for, session
+from flask import render_template, request, redirect, flash, url_for, session, Response
 import datetime
-import games, users, gameforms
+import json
+import games, users, gameforms, questions, answers
 from forms import *
 
 @app.route("/game/new", methods=["get", "post"])
@@ -121,3 +122,16 @@ def viewgameregistration(game_id, registration_id):
         question['options'] = questions.get_question_options(question['id'])
         question['answer'] = answers.get_question_answer(registration_id, question['id'])
     return render_template("registration.html", form=form, question_list=question_list, action="", title="Ilmoittautuminen: " + game['name'], mode="game", game_id=game_id)
+
+
+@app.route("/game/<game_id>/registrations", methods=["get"])
+def downloadgameregistrations(game_id):
+    '''Download the list of registrations for the game as a json list.'''
+    game = games.get_details(game_id)
+    if users.user_id() not in map(lambda org: org['id'], game['organisers']):
+        return redirect(url_for("index"))
+    registration_list = games.get_registration_data(game_id)
+    json_string = json.dumps(registration_list)
+    return Response(json_string, 
+            mimetype='application/json',
+            headers={'Content-Disposition':'attachment;filename=registrations.json'})

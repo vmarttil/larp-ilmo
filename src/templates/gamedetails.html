@@ -9,7 +9,10 @@
         <h2>
           {{ game['name'] }}
           {% if game['published'] == True and 'user_id' in session %}
-          &nbsp;<a class="btn btn-primary btn-xs" href="\game\{{ game['id'] }}\register" role="button">Ilmoittaudu</a>
+            &nbsp;<a class="btn btn-primary btn-xs" href="\game\{{ game['id'] }}\register" role="button">Ilmoittaudu</a>
+          {% endif %}
+          {% if organiser == True %}
+            &nbsp;<a class="btn btn-primary btn-xs" href="\game\{{ game['id'] }}\edit" role="button">Muokkaa</a>
           {% endif %}
         </h2>
       </div>
@@ -80,6 +83,9 @@
               </tr>
               {% endfor %}
             </table>
+            {% if registrations|length > 0 %}
+              <a class="btn btn-primary btn-block" href="\game\{{ game['id'] }}\registrations" role="button">Lataa ilmoittautumiset</a>
+            {% endif %}
           </div>
           <div class="col-md-2"></div>
         </div>

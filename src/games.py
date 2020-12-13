@@ -150,3 +150,55 @@ def send(person_id, id, name, start_date, end_date, location, price, description
         db.session.execute(sql, {"name":name, "start_date":start_date, "end_date":end_date, "location":location, "price":price, "description":description, "id":id})
     db.session.commit()
     return True
+
+def get_registration_data(game_id):
+    '''Return the complete data for all the registrations for the game.'''
+    sql_regs = "SELECT \
+                    id \
+                FROM Registration \
+                WHERE game_id = :game_id;"
+    sql_data = "SELECT \
+                fq.position AS question_no, \
+                q.question_text, \
+                a.answer_text, \
+                ARRAY_AGG(o.option_text) AS answer_options \
+                FROM Registration AS r \
+                    JOIN Answer AS a \
+                        ON r.id = a.registration_id \
+                    JOIN FormQuestion AS fq \
+                        ON a.formquestion_id = fq.id \
+                    JOIN Question AS q \
+                        ON fq.question_id = q.id \
+                    LEFT JOIN AnswerOption AS ao \
+                        ON a.id = ao.answer_id \
+                    LEFT JOIN Option AS o \
+                        ON ao.option_id = o.id \
+                WHERE r.id = :reg_id \
+                GROUP BY \
+                    fq.position, \
+                    q.question_text, \
+                    a.answer_text \
+                ORDER BY fq.position ASC;"
+    result_regs = db.session.execute(sql_regs, {"game_id":game_id})
+    registration_ids = result_regs.fetchall()
+    registration_ids = [value for value, in registration_ids]
+    registrations = []
+    for id in registration_ids:
+        print("Registration ID: " + str(id))
+        result_questions = db.session.execute(sql_data, {"reg_id":id})
+        questions = utils.to_dict_list(result_questions.fetchall())
+        registration = {'registration_id': id}
+        question_list = []
+        for question in questions:
+            print(question)
+            if question['answer_text'] == None:
+                question['answer'] = list(question['answer_options'])
+            else:
+                question['answer'] = question['answer_text']
+            del question['answer_text']
+            del question['answer_options']
+            print(question)
+            question_list.append(question)
+        registration['questions'] = question_list
+        registrations.append(registration)
+    return registrations
